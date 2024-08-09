@@ -38,17 +38,18 @@ if __name__ == "__main__":
 
         api_dialog = APIKeyDialog(None)
         api_dialog_response = api_dialog.run()
-        api_dialog.destroy()
 
         if api_dialog_response == Gtk.ResponseType.OK:
             api_key = api_dialog.get_input()
             api_key_path.write_text(f"API_KEY={api_key}")
+            api_dialog.destroy()
             
             try:
                 main(api_key)
             except Exception as e: # EAFP
                 # TODO: MessageDialog for error
                 api_key_path.unlink()
+                raise e
     else:
         api_key = api_key_path.read_text().replace("API_KEY=", "")
         main(api_key)
