@@ -16,9 +16,9 @@ class TodoistElement(Gtk.ListBoxRow):
         hbox.add(label)
         self.add(hbox)
 
-class TodoistWindow(Gtk.ApplicationWindow):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+class TodoistWindow(Gtk.Window):
+    def __init__(self, api_key: str, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         GLib.set_application_name('Todoist Dailies')
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
@@ -37,7 +37,7 @@ class TodoistWindow(Gtk.ApplicationWindow):
         listbox.set_vexpand(True)
         box.add(listbox)
 
-        tasks = self.get_tasks_sync()
+        tasks = self.get_tasks_sync(api_key)
         if tasks is not None:
             for task in tasks:
                 listbox.add(TodoistElement(task))
@@ -55,8 +55,8 @@ class TodoistWindow(Gtk.ApplicationWindow):
         box.add(buttons_hbox)
 
     @staticmethod
-    def get_tasks_sync():
-        api = TodoistAPI("")
+    def get_tasks_sync(api_key: str):
+        api = TodoistAPI(api_key)
         try:
             tasks = api.get_tasks(filter="today|overdue")
             for task in tasks:
