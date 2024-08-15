@@ -25,9 +25,10 @@ def main(api_key: str):
     GLib.timeout_add(1000, run_schedule)
     window.connect("delete-event", lambda *_: hide_window(window)) # Keeps the schedule alive
     window.connect("destroy", lambda _: Gtk.main_quit()) # Actually ends
-    window.show_all()
+    status_icon.connect("quit_item", lambda _: Gtk.main_quit()) # Ends process but with tray icon
 
     schedule.every(10).seconds.do(window.on_schedule)
+    window.show_all()
     Gtk.main()
 
 
