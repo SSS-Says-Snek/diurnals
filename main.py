@@ -27,7 +27,7 @@ def main(api_key: str):
     window.connect("destroy", lambda _: Gtk.main_quit()) # Actually ends
     window.show_all()
 
-    schedule.every(2).seconds.do(window.show_all)
+    schedule.every(10).seconds.do(window.on_schedule)
     Gtk.main()
 
 

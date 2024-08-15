@@ -1,3 +1,5 @@
+from datetime import date
+
 import gi
 
 gi.require_version("Gtk", "3.0")
@@ -21,6 +23,8 @@ class TodoistWindow(Gtk.Window):
         super().__init__(*args, **kwargs)
         GLib.set_application_name('Todoist Dailies')
 
+        self.set_default_size(500, 250)
+
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
         box.props.margin_start = 24
         box.props.margin_end = 24
@@ -28,9 +32,9 @@ class TodoistWindow(Gtk.Window):
         box.props.margin_bottom = 24
         self.add(box)
 
-        header_bar = Gtk.HeaderBar()
-        header_bar.props.title = "Todoist Dailies for August 6th, 2024"
-        self.set_titlebar(header_bar)
+        self.header_bar = Gtk.HeaderBar()
+        self.update_date()
+        self.set_titlebar(self.header_bar)
 
         listbox = Gtk.ListBox()
         listbox.props.selection_mode = Gtk.SelectionMode.NONE
@@ -54,6 +58,14 @@ class TodoistWindow(Gtk.Window):
         buttons_hbox.add(self.close_button)
         box.add(buttons_hbox)
 
+    def update_date(self):
+        formatted_date = date.today().strftime("%B %d, %Y")
+        self.header_bar.props.title = f"Tasks for {formatted_date}"
+
+    def on_schedule(self):
+        self.show_all()
+        self.update_date()
+
     @staticmethod
     def get_tasks_sync(api_key: str):
         api = TodoistAPI(api_key)
@@ -65,4 +77,5 @@ class TodoistWindow(Gtk.Window):
             raise error
         else:
             return tasks
+    
 
