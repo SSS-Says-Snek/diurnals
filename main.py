@@ -18,8 +18,8 @@ def hide_window(window):
     window.hide()
     return True
 
-def main(api_key: str):
-    window = TodoistWindow(api_key)
+def main(app: Gtk.Application, api_key: str):
+    window = TodoistWindow(api_key, application=app)
     status_icon = TodoistStatusIcon()
 
     GLib.timeout_add(1000, run_schedule)
@@ -33,6 +33,9 @@ def main(api_key: str):
 
 
 if __name__ == "__main__":
+    app = Gtk.Application(application_id="com.bmcomis2018.todoist-dailies")
+    app.connect('activate', lambda app: main(app, api_key))
+
     api_key_path = pathlib.Path(GLib.get_user_config_dir()) / ".todoist-dailies.env"
     if not api_key_path.exists():
         api_key_path.touch()
@@ -46,11 +49,11 @@ if __name__ == "__main__":
             api_dialog.destroy()
             
             try:
-                main(api_key)
+                app.run(None)
             except Exception as e: # EAFP
                 # TODO: MessageDialog for error
                 api_key_path.unlink()
                 raise e
     else:
         api_key = api_key_path.read_text().replace("API_KEY=", "")
-        main(api_key)
+        app.run(None)

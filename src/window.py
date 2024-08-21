@@ -1,10 +1,7 @@
 from datetime import date
 
-import gi
-
 from src.todoist_worker import TodoistWorker
 
-gi.require_version("Gtk", "3.0")
 from gi.repository import Gtk
 from todoist_api_python.api import TodoistAPI
 from todoist_api_python.models import Task
@@ -24,7 +21,7 @@ class TodoistElement(Gtk.ListBoxRow):
         self.add(hbox)
 
 
-class TodoistWindow(Gtk.Window):
+class TodoistWindow(Gtk.ApplicationWindow):
     def __init__(self, api_key: str, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.set_default_size(500, 250)
