@@ -3,7 +3,7 @@ import gi
 
 from todoist_api_python.api import TodoistAPI
 
-gi.require_version("Gtk", "3.0")
+gi.require_version("Gtk", "4.0")
 from gi.repository import GObject, Gio, GLib
 
 class TodoistWorker(GObject.GObject):
@@ -12,7 +12,7 @@ class TodoistWorker(GObject.GObject):
         
         self.api = api
 
-    def get_tasks_async(self, callback):
+    def get_tasks_async(self, callback: Callable):
         task = Gio.Task.new(self, None, callback, None)
         task.set_return_on_cancel(False)
         task.run_in_thread(self._get_tasks_thread)
