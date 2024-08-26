@@ -8,14 +8,28 @@ from gi.repository import Gtk, Adw
 from todoist_api_python.api import TodoistAPI
 from todoist_api_python.models import Task
 
+
 class TodoistElement(Gtk.ListBoxRow):
-    def __init__(self, todoist_task: Task, callback: Callable[[Gtk.CheckButton, "TodoistElement"], None], *args, **kwargs):
+    def __init__(
+        self,
+        todoist_task: Task,
+        callback: Callable[[Gtk.CheckButton, "TodoistElement"], None],
+        *args,
+        **kwargs,
+    ):
         super().__init__(*args, **kwargs)
         self.todoist_task = todoist_task
 
         self.set_selectable(False)
 
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24, margin_start=12, margin_end=12, margin_top=6, margin_bottom=6)
+        hbox = Gtk.Box(
+            orientation=Gtk.Orientation.HORIZONTAL,
+            spacing=24,
+            margin_start=12,
+            margin_end=12,
+            margin_top=6,
+            margin_bottom=6,
+        )
         self.check_button = Gtk.CheckButton()
         self.check_button.connect("toggled", lambda button: callback(button, self))
 
@@ -35,7 +49,7 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.set_hide_on_close(True)
 
         self.api = TodoistAPI(api_key)
-        self.todoist_worker = TodoistWorker(self.api) # Concurrent
+        self.todoist_worker = TodoistWorker(self.api)  # Concurrent
 
         outer_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
@@ -71,8 +85,8 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.close_button = Gtk.Button(label="Mark Done & Close")
         self.quit_button = Gtk.Button(label="Quit Process")
 
-        self.close_button.connect('clicked', self.on_close_button)
-        self.quit_button.connect('clicked', lambda _: self.destroy())
+        self.close_button.connect("clicked", self.on_close_button)
+        self.quit_button.connect("clicked", lambda _: self.destroy())
 
         buttons_hbox = Gtk.Box(spacing=24, halign=Gtk.Align.END)
         buttons_hbox.append(self.quit_button)
@@ -108,7 +122,6 @@ class TodoistWindow(Adw.ApplicationWindow):
         """Activate according to schedule set"""
         self.sync_tasks()
         self.update_date()
-
         self.show()
 
     def on_close_button(self, _):
@@ -129,7 +142,7 @@ class TodoistWindow(Adw.ApplicationWindow):
             for task in tasks:
                 task_element = TodoistElement(task, self.toggle_complete_task)
                 self.listbox.append(task_element)
-        else: # get_tasks Error
+        else:  # get_tasks Error
             self.on_get_tasks_failed()
         self.listbox.show()
 
@@ -138,9 +151,8 @@ class TodoistWindow(Adw.ApplicationWindow):
 
     def on_complete_tasks_failed(self):
         self._error_dialog("Todoist Dailies - Network Error", "Could not complete tasks!")
-    
+
     def _error_dialog(self, title: str, secondary_text: str):
         error_dialog = Adw.AlertDialog(heading=title, body=secondary_text)
         error_dialog.add_response("ok", "Okay")
         error_dialog.present(self)
-

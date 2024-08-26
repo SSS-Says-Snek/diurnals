@@ -5,14 +5,15 @@ gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Gtk, Adw
 
+
 class APIKeyDialog(Adw.ApplicationWindow):
-    def __init__(self, app: Adw.Application, ok_callback: Callable[[str], None]): 
+    def __init__(self, app: Adw.Application, ok_callback: Callable[[str], None]):
         super().__init__(application=app, title="Enter API Key:")
 
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box.append(Adw.HeaderBar())
         self.set_content(box)
-        
+
         self.ok_callback = ok_callback
         self.api_entry = Gtk.Entry()
         box.append(self.api_entry)
@@ -25,7 +26,7 @@ class APIKeyDialog(Adw.ApplicationWindow):
         buttons.append(ok_button)
         buttons.append(cancel_button)
         box.append(buttons)
-        
+
     def on_ok(self, _):
         self.ok_callback(self.get_input())
         self.close()

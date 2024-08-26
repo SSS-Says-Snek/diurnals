@@ -1,0 +1,2 @@
+[tool.ruff]
+line-length = 120 # dawg 88 is a bit too short these days
