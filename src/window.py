@@ -15,7 +15,7 @@ class TodoistElement(Gtk.ListBoxRow):
 
         self.set_selectable(False)
 
-        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24)
+        hbox = Gtk.Box(orientation=Gtk.Orientation.HORIZONTAL, spacing=24, margin_start=12, margin_end=12, margin_top=6, margin_bottom=6)
         self.check_button = Gtk.CheckButton()
         self.check_button.connect("toggled", lambda button: callback(button, self))
 
@@ -48,6 +48,7 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.header_bar = Adw.HeaderBar()
         self.header_bar.add_css_class("flat")
         self.update_date()
+
         outer_box.append(self.header_bar)
         outer_box.append(box)
         self.set_content(outer_box)
@@ -56,7 +57,9 @@ class TodoistWindow(Adw.ApplicationWindow):
         config_button.connect("clicked", self.open_config)
         self.header_bar.pack_end(config_button)
 
+        # List box
         self.listbox = Gtk.ListBox()
+        self.listbox.add_css_class("boxed-list")
         self.listbox.props.selection_mode = Gtk.SelectionMode.NONE
         self.listbox.set_vexpand(True)
         box.append(self.listbox)

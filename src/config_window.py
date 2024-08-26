@@ -1,5 +1,7 @@
 from gi.repository import Gtk, Adw
 
+from datetime import datetime
+
 class ScheduleRow(Adw.ActionRow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -24,7 +26,7 @@ class ScheduleRow(Adw.ActionRow):
         box.append(self.minute_option)
         box.append(time_box)
 
-        self.am_pm_option = Gtk.DropDown.new_from_strings(["AM", "PM"])
+        self.am_pm_option = Gtk.DropDown.new_from_strings(["PM", "AM"])
         self.am_pm_option.get_first_child().add_css_class("flat") # ahh type hint, workaround for now
         box.append(self.am_pm_option)
 
@@ -36,9 +38,20 @@ class ScheduleRow(Adw.ActionRow):
         spin_button.set_text(f"{int(adjustment.get_value()):02d}")
         return True
 
-    def get_options(self):
-        print(self.day_option.get_selected_item())
-        return {"day": self.day_option.get_selected_item()}
+    def get_options(self, _):
+        result = {}
+        day_item = self.day_option.get_selected_item()
+        am_pm_item = self.am_pm_option.get_selected_item()
+
+        hour = self.hour_option.get_value_as_int()
+        minute = self.minute_option.get_value_as_int()
+        if isinstance(day_item, Gtk.StringObject): # Always true, for the type hint
+            result["day"] = day_item.get_string()
+        if isinstance(am_pm_item, Gtk.StringObject):
+            am_pm = am_pm_item.get_string()
+            input_time = datetime.strptime(f"{hour}:{minute} {am_pm}", "%I:%M %p")
+            result["time"] = datetime.strftime(input_time, f"%H:%M")
+        print(result)
 
 
 class ConfigWindow(Adw.PreferencesDialog):
@@ -70,3 +83,4 @@ class ConfigWindow(Adw.PreferencesDialog):
         # A
         self.add(Adw.PreferencesPage(title="Ab"))
 
+        self.connect("closed", e.get_options)
