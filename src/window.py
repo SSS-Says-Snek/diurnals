@@ -2,6 +2,7 @@ from collections.abc import Callable
 from datetime import date
 
 from src.todoist_worker import TodoistWorker
+from src.config_window import ConfigWindow
 
 from gi.repository import Gtk, Adw
 from todoist_api_python.api import TodoistAPI
@@ -25,9 +26,12 @@ class TodoistElement(Gtk.ListBoxRow):
 
 
 class TodoistWindow(Adw.ApplicationWindow):
-    def __init__(self, api_key: str, *args, **kwargs):
+    def __init__(self, api_key: str, application: Adw.Application, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.set_default_size(500, 350)
+        self.app = application
+        self.set_application(self.app)
+
+        self.set_default_size(1000, 800)
         self.set_hide_on_close(True)
 
         self.api = TodoistAPI(api_key)
@@ -41,13 +45,15 @@ class TodoistWindow(Adw.ApplicationWindow):
         box.props.margin_bottom = 24
 
         # Header
-        self.header_bar = Gtk.HeaderBar()
+        self.header_bar = Adw.HeaderBar()
+        self.header_bar.add_css_class("flat")
         self.update_date()
         outer_box.append(self.header_bar)
         outer_box.append(box)
         self.set_content(outer_box)
 
         config_button = Gtk.Button.new_from_icon_name("open-menu-symbolic")
+        config_button.connect("clicked", self.open_config)
         self.header_bar.pack_end(config_button)
 
         self.listbox = Gtk.ListBox()
@@ -65,12 +71,16 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.close_button.connect('clicked', self.on_close_button)
         self.quit_button.connect('clicked', lambda _: self.destroy())
 
-        buttons_hbox = Gtk.Box(spacing=24)
+        buttons_hbox = Gtk.Box(spacing=24, halign=Gtk.Align.END)
         buttons_hbox.append(self.quit_button)
         buttons_hbox.append(self.close_button)
         box.append(buttons_hbox)
 
         self.widgets_to_remove: list[TodoistElement] = []
+
+    def open_config(self, _):
+        config_window = ConfigWindow()
+        config_window.present(self)
 
     def toggle_complete_task(self, button: Gtk.CheckButton, child: TodoistElement):
         if button.get_active():
