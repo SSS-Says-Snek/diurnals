@@ -48,7 +48,7 @@ def inner_main(app: Adw.Application, api_key: str, config: ConfigParser):
         if day == "weekday":
             for d in weekdays:
                 schedule_days_dict[d].at(time).do(window.on_schedule)
-        elif day == "weekend days":
+        elif day == "weekend_day":
             for d in weekends:
                 schedule_days_dict[d].at(time).do(window.on_schedule)
         else:

@@ -71,6 +71,7 @@ class ScheduleRow(Adw.ActionRow):
 
         # Syncs config file to widget
         day, time = self.config["Routine"][self.id].split()
+        day = day.replace("_", " ")
         time = self.convert_24hr_to_12hr(time)
         hour, minute, am_pm = time.split()
         self.day_option.set_selected(self.DAY_OPTIONS.index(day))
@@ -121,7 +122,7 @@ class ScheduleRow(Adw.ActionRow):
         hour = self.hour_option.get_value_as_int()
         minute = self.minute_option.get_value_as_int()
         if isinstance(day_item, Gtk.StringObject):  # Always true, for the type hint
-            result += day_item.get_string() + " "
+            result += day_item.get_string().replace(" ", "_") + " "
         if isinstance(am_pm_item, Gtk.StringObject):  # Always true, for the type hint
             am_pm = am_pm_item.get_string()
             result += self.convert_12hr_to_24hr(f"{hour}:{minute} {am_pm}")
