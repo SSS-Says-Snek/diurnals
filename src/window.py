@@ -1,10 +1,12 @@
 from collections.abc import Callable
+from configparser import ConfigParser
 from datetime import date
+from pathlib import Path
 
 from src.todoist_worker import TodoistWorker
 from src.config_window import ConfigWindow
 
-from gi.repository import Gtk, Adw
+from gi.repository import Gtk, Adw, GLib
 from todoist_api_python.api import TodoistAPI
 from todoist_api_python.models import Task
 
@@ -40,7 +42,7 @@ class TodoistElement(Gtk.ListBoxRow):
 
 
 class TodoistWindow(Adw.ApplicationWindow):
-    def __init__(self, api_key: str, application: Adw.Application, *args, **kwargs):
+    def __init__(self, api_key: str, config: ConfigParser, application: Adw.Application, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.app = application
         self.set_application(self.app)
@@ -50,6 +52,8 @@ class TodoistWindow(Adw.ApplicationWindow):
 
         self.api = TodoistAPI(api_key)
         self.todoist_worker = TodoistWorker(self.api)  # Concurrent
+
+        self.config = config
 
         outer_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
@@ -96,7 +100,7 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.widgets_to_remove: list[TodoistElement] = []
 
     def open_config(self, _):
-        config_window = ConfigWindow()
+        config_window = ConfigWindow(self.config)
         config_window.present(self)
 
     def toggle_complete_task(self, button: Gtk.CheckButton, child: TodoistElement):
