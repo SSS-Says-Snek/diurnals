@@ -1,18 +1,18 @@
-from configparser import ConfigParser
 import pathlib
+from configparser import ConfigParser
 
-import schedule
 import gi
+import schedule
+
+from src.constants import API_KEY_PATH, APPLICATION_ID, CONFIG_PATH
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import GLib, Adw
+from gi.repository import Adw, GLib
 
-from src.window import TodoistWindow
 from src.api_dialog import APIKeyDialog
+from src.window import TodoistWindow
 
-APPLICATION_ID = "com.bmcomis2018.todoist-dailies"
-CONFIG_PATH = pathlib.Path(GLib.get_user_config_dir()) / "todoist-dailies.conf"
 
 def run_schedule():
     schedule.run_pending()
@@ -58,7 +58,6 @@ def inner_main(app: Adw.Application, api_key: str, config: ConfigParser):
 
 
 def main(app: Adw.Application):
-    api_key_path = pathlib.Path(GLib.get_user_config_dir()) / ".todoist-dailies.env"
 
     if not CONFIG_PATH.exists():
         config = ConfigParser()
@@ -69,13 +68,13 @@ def main(app: Adw.Application):
         config = ConfigParser()
         config.read(CONFIG_PATH)
 
-    if not api_key_path.exists():
-        api_key_path.touch()
+    if not API_KEY_PATH.exists():
+        API_KEY_PATH.touch()
 
-        api_dialog = APIKeyDialog(app, lambda api_key: api_dialog_ok(app, api_key_path, api_key, config))
+        api_dialog = APIKeyDialog(app, lambda api_key: api_dialog_ok(app, API_KEY_PATH, api_key, config))
         api_dialog.present()
     else:
-        api_key = api_key_path.read_text().replace("API_KEY=", "")
+        api_key = API_KEY_PATH.read_text().replace("API_KEY=", "")
         inner_main(app, api_key, config)
 
 

@@ -1,8 +1,8 @@
 import gi
 
 gi.require_version("AyatanaAppIndicator3", "0.1")
-from gi.repository import Gtk, GObject
 from gi.repository import AyatanaAppIndicator3 as appindicator
+from gi.repository import GObject, Gtk
 
 
 class TodoistStatusIcon(GObject.GObject):

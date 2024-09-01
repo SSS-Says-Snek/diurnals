@@ -1,12 +1,10 @@
 from collections.abc import Callable
 from configparser import ConfigParser
-from pathlib import Path
-
-from gi.repository import Gtk, Adw, GLib
-
 from datetime import datetime
 
-CONFIG_PATH = Path(GLib.get_user_config_dir()) / "todoist-dailies.conf"
+from gi.repository import Adw, Gtk
+
+from src.constants import CONFIG_PATH
 
 class ScheduleRow(Adw.ActionRow):
     DAY_OPTIONS = [

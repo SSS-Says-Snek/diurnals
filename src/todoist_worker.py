@@ -1,10 +1,10 @@
 from collections.abc import Callable
-import gi
 
+import gi
 from todoist_api_python.api import TodoistAPI
 
 gi.require_version("Gtk", "4.0")
-from gi.repository import GObject, Gio, GLib
+from gi.repository import Gio, GLib, GObject
 
 
 class TodoistWorker(GObject.GObject):
