@@ -1,14 +1,12 @@
 import gi
 
-gi.require_version('AyatanaAppIndicator3', '0.1')
-from gi.repository import Gtk, GObject
+gi.require_version("AyatanaAppIndicator3", "0.1")
 from gi.repository import AyatanaAppIndicator3 as appindicator
+from gi.repository import GObject, Gtk
+
 
 class TodoistStatusIcon(GObject.GObject):
-    __gsignals__ = {
-        "quit_item": (GObject.SIGNAL_RUN_FIRST, None, ())
-    }
-
+    __gsignals__ = {"quit_item": (GObject.SIGNAL_RUN_FIRST, None, ())}
 
     def __init__(self):
         super().__init__()
@@ -16,7 +14,7 @@ class TodoistStatusIcon(GObject.GObject):
         self.indicator = appindicator.Indicator.new(
             "Todoist Dailies",
             "gammastep-status-on",
-            appindicator.IndicatorCategory.APPLICATION_STATUS
+            appindicator.IndicatorCategory.APPLICATION_STATUS,
         )
         self.indicator.set_status(appindicator.IndicatorStatus.ACTIVE)
         self.status_menu = Gtk.Menu()
@@ -27,4 +25,3 @@ class TodoistStatusIcon(GObject.GObject):
 
         self.status_menu.show_all()
         self.indicator.set_menu(self.status_menu)
-

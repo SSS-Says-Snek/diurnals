@@ -1,59 +1,90 @@
 import pathlib
+from configparser import ConfigParser
 
-import schedule
 import gi
+import schedule
 
-gi.require_version("Gtk", "3.0")
-from gi.repository import GLib, Gtk
+from src.constants import API_KEY_PATH, APPLICATION_ID, CONFIG_PATH
 
-from src.statusicon import TodoistStatusIcon
-from src.window import TodoistWindow
+gi.require_version("Gtk", "4.0")
+gi.require_version("Adw", "1")
+from gi.repository import Adw, GLib
+
 from src.api_dialog import APIKeyDialog
+from src.window import TodoistWindow
+
 
 def run_schedule():
     schedule.run_pending()
     return True
 
+
 def hide_window(window):
     window.hide()
     return True
 
-def main(app: Gtk.Application, api_key: str):
-    window = TodoistWindow(api_key, application=app)
-    status_icon = TodoistStatusIcon()
+
+def inner_main(app: Adw.Application, api_key: str, config: ConfigParser):
+    window = TodoistWindow(api_key, config=config, application=app)
 
     GLib.timeout_add(1000, run_schedule)
-    window.connect("delete-event", lambda *_: hide_window(window)) # Keeps the schedule alive
-    window.connect("destroy", lambda _: Gtk.main_quit()) # Actually ends
-    status_icon.connect("quit_item", lambda _: Gtk.main_quit()) # Ends process but with tray icon
+    window.connect("destroy", lambda _: app.quit())  # Actually ends
 
-    schedule.every(10).seconds.do(window.on_schedule)
-    window.show_all()
-    Gtk.main()
+    for routine in config["Routine"].values():
+        day, time = routine.split()
+
+        schedule_days_dict = {
+            "day": schedule.every().day,
+            "Monday": schedule.every().monday,
+            "Tuesday": schedule.every().tuesday,
+            "Wednesday": schedule.every().wednesday,
+            "Thursday": schedule.every().thursday,
+            "Friday": schedule.every().friday,
+            "Saturday": schedule.every().saturday,
+            "Sunday": schedule.every().sunday
+        }
+        weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
+        weekends = ["Saturday", "Sunday"]
+        if day == "weekday":
+            for d in weekdays:
+                schedule_days_dict[d].at(time).do(window.on_schedule)
+        elif day == "weekend_day":
+            for d in weekends:
+                schedule_days_dict[d].at(time).do(window.on_schedule)
+        else:
+            schedule_days_dict[day].at(time).do(window.on_schedule)
+
+    window.present()
+
+
+def main(app: Adw.Application):
+
+    if not CONFIG_PATH.exists():
+        config = ConfigParser()
+        config["Routine"] = {}
+        with open(CONFIG_PATH, "w") as w:
+            config.write(w)
+    else:
+        config = ConfigParser()
+        config.read(CONFIG_PATH)
+
+    if not API_KEY_PATH.exists():
+        API_KEY_PATH.touch()
+
+        api_dialog = APIKeyDialog(app, lambda api_key: api_dialog_ok(app, API_KEY_PATH, api_key, config))
+        api_dialog.present()
+    else:
+        api_key = API_KEY_PATH.read_text().replace("API_KEY=", "")
+        inner_main(app, api_key, config)
+
+
+def api_dialog_ok(app: Adw.Application, api_key_path: pathlib.Path, api_key: str, config: ConfigParser):
+    api_key_path.write_text(f"API_KEY={api_key}")
+    inner_main(app, api_key, config)
 
 
 if __name__ == "__main__":
-    app = Gtk.Application(application_id="com.bmcomis2018.todoist-dailies")
-    app.connect('activate', lambda app: main(app, api_key))
+    app = Adw.Application(application_id=APPLICATION_ID)
+    app.connect("activate", main)
 
-    api_key_path = pathlib.Path(GLib.get_user_config_dir()) / ".todoist-dailies.env"
-    if not api_key_path.exists():
-        api_key_path.touch()
-
-        api_dialog = APIKeyDialog(None)
-        api_dialog_response = api_dialog.run()
-
-        if api_dialog_response == Gtk.ResponseType.OK:
-            api_key = api_dialog.get_input()
-            api_key_path.write_text(f"API_KEY={api_key}")
-            api_dialog.destroy()
-            
-            try:
-                app.run(None)
-            except Exception as e: # EAFP
-                # TODO: MessageDialog for error
-                api_key_path.unlink()
-                raise e
-    else:
-        api_key = api_key_path.read_text().replace("API_KEY=", "")
-        app.run(None)
+    app.run(None)

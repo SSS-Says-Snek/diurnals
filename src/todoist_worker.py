@@ -1,23 +1,26 @@
 from collections.abc import Callable
-import gi
 
+import gi
 from todoist_api_python.api import TodoistAPI
 
-gi.require_version("Gtk", "3.0")
-from gi.repository import GObject, Gio, GLib
+gi.require_version("Gtk", "4.0")
+from gi.repository import Gio, GLib, GObject
+
 
 class TodoistWorker(GObject.GObject):
     def __init__(self, api: TodoistAPI):
         super().__init__()
-        
+
         self.api = api
 
-    def get_tasks_async(self, callback):
+    def get_tasks_async(self, callback: Callable):
         task = Gio.Task.new(self, None, callback, None)
         task.set_return_on_cancel(False)
         task.run_in_thread(self._get_tasks_thread)
 
-    def complete_tasks_async(self, completed_task_ids: list[str], error_callback: Callable[[], None]): # List of Todoist tasks, NOT GIO
+    def complete_tasks_async(
+        self, completed_task_ids: list[str], error_callback: Callable[[], None]
+    ):  # List of Todoist tasks, NOT GIO
         task = Gio.Task.new(self, None, None, None)
         task.set_return_on_cancel(False)
         task.run_in_thread(lambda *args: self._complete_tasks_thread(completed_task_ids, error_callback, *args))
@@ -33,7 +36,7 @@ class TodoistWorker(GObject.GObject):
         """Internal thread callback. don't use it dawg"""
         if task.return_error_if_cancelled():
             return
-        
+
         try:
             tasks = self.api.get_tasks(filter="today|overdue")
         except Exception:
@@ -41,11 +44,17 @@ class TodoistWorker(GObject.GObject):
         else:
             task.return_value(tasks)
 
-    def _complete_tasks_thread(self, completed_task_ids: list[str], error_callback: Callable[[], None], task: Gio.Task, *_):
+    def _complete_tasks_thread(
+        self,
+        completed_task_ids: list[str],
+        error_callback: Callable[[], None],
+        task: Gio.Task,
+        *_,
+    ):
         """Internal thread callback. don't use it dawg"""
         if task.return_error_if_cancelled():
             return
-        
+
         for completed_task in completed_task_ids:
             try:
                 self.api.close_task(completed_task)
