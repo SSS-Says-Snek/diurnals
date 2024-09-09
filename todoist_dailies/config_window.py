@@ -4,7 +4,7 @@ from datetime import datetime
 
 from gi.repository import Adw, Gtk
 
-from src.constants import CONFIG_PATH
+from todoist_dailies.constants import CONFIG_PATH
 
 class ScheduleRow(Adw.ActionRow):
     DAY_OPTIONS = [
@@ -72,13 +72,14 @@ class ScheduleRow(Adw.ActionRow):
         day = day.replace("_", " ")
         time = self.convert_24hr_to_12hr(time)
         hour, minute, am_pm = time.split()
+
         self.day_option.set_selected(self.DAY_OPTIONS.index(day))
         self.am_pm_option.set_selected(self.AM_PM_OPTIONS.index(am_pm))
         self.hour_option.set_value(int(hour))
         self.minute_option.set_value(int(minute))
 
+        # Adds all elements to box
         box = Gtk.Box(spacing=6, margin_start=12, margin_end=12, margin_top=6, margin_bottom=6)
-
         box.append(Gtk.Label(label="Activate every"))
         box.append(self.day_option)
         box.append(Gtk.Label(label="at"))

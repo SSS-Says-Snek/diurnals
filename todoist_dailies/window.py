@@ -6,8 +6,8 @@ from gi.repository import Adw, Gtk
 from todoist_api_python.api import TodoistAPI
 from todoist_api_python.models import Task
 
-from src.config_window import ConfigWindow
-from src.todoist_worker import TodoistWorker
+from todoist_dailies.config_window import ConfigWindow
+from todoist_dailies.todoist_worker import TodoistWorker
 
 
 class TodoistElement(Gtk.ListBoxRow):

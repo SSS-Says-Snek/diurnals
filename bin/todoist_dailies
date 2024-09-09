@@ -1,0 +1,10 @@
+#!@PYTHON@
+import sys
+pkgdatadir = '@pkgdatadir@'
+
+sys.path.insert(1, pkgdatadir)
+
+if __name__ == "__main__":
+    from todoist_dailies import main
+
+    main.real_main()

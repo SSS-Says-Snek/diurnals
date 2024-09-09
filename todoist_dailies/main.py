@@ -1,17 +1,18 @@
+#!/usr/bin/python3
 import pathlib
 from configparser import ConfigParser
 
 import gi
 import schedule
 
-from src.constants import API_KEY_PATH, APPLICATION_ID, CONFIG_PATH
+from todoist_dailies.constants import API_KEY_PATH, APPLICATION_ID, CONFIG_PATH
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib
 
-from src.api_dialog import APIKeyDialog
-from src.window import TodoistWindow
+from todoist_dailies.api_dialog import APIKeyDialog
+from todoist_dailies.window import TodoistWindow
 
 
 def run_schedule():
@@ -83,8 +84,12 @@ def api_dialog_ok(app: Adw.Application, api_key_path: pathlib.Path, api_key: str
     inner_main(app, api_key, config)
 
 
-if __name__ == "__main__":
+def real_main():
     app = Adw.Application(application_id=APPLICATION_ID)
     app.connect("activate", main)
 
     app.run(None)
+
+
+if __name__ == "__main__":
+    real_main()
