@@ -6,6 +6,7 @@ from gi.repository import Adw, Gtk
 
 from todoist_dailies.constants import CONFIG_PATH
 
+
 class ScheduleRow(Adw.ActionRow):
     DAY_OPTIONS = [
         "day",
@@ -127,11 +128,12 @@ class ScheduleRow(Adw.ActionRow):
             result += self.convert_12hr_to_24hr(f"{hour}:{minute} {am_pm}")
 
         return result
-    
+
     def write_to_config(self, *_):
         self.config["Routine"][self.id] = self.get_options()
         with open(CONFIG_PATH, "w") as w:
             self.config.write(w)
+
 
 class ConfigWindow(Adw.PreferencesDialog):
     def __init__(self, config: ConfigParser, *args, **kwargs):

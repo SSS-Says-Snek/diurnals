@@ -1,18 +1,17 @@
-#!/usr/bin/python3
 import pathlib
 from configparser import ConfigParser
 
 import gi
 import schedule
 
-from todoist_dailies.constants import API_KEY_PATH, APPLICATION_ID, CONFIG_PATH
+from src.constants import API_KEY_PATH, APPLICATION_ID, CONFIG_PATH
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, GLib
 
-from todoist_dailies.api_dialog import APIKeyDialog
-from todoist_dailies.window import TodoistWindow
+from src.api_dialog import APIKeyDialog
+from src.window import TodoistWindow
 
 
 def run_schedule():
@@ -42,7 +41,7 @@ def inner_main(app: Adw.Application, api_key: str, config: ConfigParser):
             "Thursday": schedule.every().thursday,
             "Friday": schedule.every().friday,
             "Saturday": schedule.every().saturday,
-            "Sunday": schedule.every().sunday
+            "Sunday": schedule.every().sunday,
         }
         weekdays = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"]
         weekends = ["Saturday", "Sunday"]
@@ -59,7 +58,6 @@ def inner_main(app: Adw.Application, api_key: str, config: ConfigParser):
 
 
 def main(app: Adw.Application):
-
     if not CONFIG_PATH.exists():
         config = ConfigParser()
         config["Routine"] = {}
