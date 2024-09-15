@@ -140,7 +140,6 @@ class ConfigWindow(Adw.PreferencesDialog):
         super().__init__(*args, **kwargs)
 
         self.config = config
-
         self.set_content_width(1000)
         self.set_content_height(800)
         self.connect("closed", self.save_preferences)
@@ -168,14 +167,13 @@ class ConfigWindow(Adw.PreferencesDialog):
         general_page = Adw.PreferencesPage(title="General", icon_name="emblem-system-symbolic")
         filter_group = Adw.PreferencesGroup(title="Filters")
         self.filter_entry = Adw.EntryRow(title="Enter your Todoist filter here", text=self.config["General"]["filter"])
-        self.filter_entry.connect("entry-activated", lambda _: print("AAA"))
+        self.filter_entry.connect("entry-activated", self.save_preferences)
         filter_group.add(self.filter_entry)
 
         general_page.add(filter_group)
         self.add(general_page)
 
     def save_preferences(self, _):
-        print("A")
         self.config["General"]["filter"] = self.filter_entry.get_text()
         with open(CONFIG_PATH, "w") as w:
             self.config.write(w)

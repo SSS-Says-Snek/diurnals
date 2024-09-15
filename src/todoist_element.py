@@ -33,6 +33,7 @@ class TodoistElement(Gtk.ListBoxRow):
 
         label = Gtk.Label(label=task.content, halign=Gtk.Align.START)
         vbox.append(label)
+
         if self.task.due is not None:  # Set due date label
             label = "Due {}"
             css_classes = ["due-date"]

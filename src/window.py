@@ -42,14 +42,21 @@ class TodoistWindow(Adw.ApplicationWindow):
         config_button = Gtk.Button.new_from_icon_name("open-menu-symbolic")
         config_button.connect("clicked", self.open_config)
         self.header_bar.pack_end(config_button)
-
+        
         # List box
         self.listbox = Gtk.ListBox()
         self.listbox.add_css_class("boxed-list")
         self.listbox.props.selection_mode = Gtk.SelectionMode.NONE
         self.listbox.set_vexpand(True)
         self.listbox.set_sort_func(TodoistElement.sort_rows)  # type: ignore
-        box.append(self.listbox)
+
+        e = Adw.StatusPage(title="No tasks to do currently", description="Enjoy the day with your free time!", icon_name="task-due-symbolic")
+
+        self.main_content = Gtk.Stack()
+        self.main_content.add_named(self.listbox, "task-list")
+        self.main_content.add_named(e, "no-tasks")
+
+        box.append(self.main_content)
 
         # Get tasks and add them
         self.sync_tasks()
@@ -112,9 +119,13 @@ class TodoistWindow(Adw.ApplicationWindow):
         if tasks != -1 and not None:
             self.listbox.remove_all()
 
-            for task in tasks:
-                task_element = TodoistElement(task, self.toggle_complete_task)
-                self.listbox.append(task_element)
+            if len(tasks) == 0:
+                self.main_content.set_visible_child_name("no-tasks")
+            else:
+                self.main_content.set_visible_child_name("task-list")
+                for task in tasks:
+                    task_element = TodoistElement(task, self.toggle_complete_task)
+                    self.listbox.append(task_element)
         else:  # get_tasks Error
             self.on_get_tasks_failed()
         self.listbox.show()
