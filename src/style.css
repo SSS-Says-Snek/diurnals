@@ -1,0 +1,11 @@
+.due-date {
+  color: #77767b;
+}
+
+.overdue {
+  color: #f66151;
+}
+
+.due-today {
+  color: #8ff0a4;
+}

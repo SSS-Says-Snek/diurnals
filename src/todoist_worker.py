@@ -1,4 +1,5 @@
 from collections.abc import Callable
+from configparser import ConfigParser
 
 import gi
 from todoist_api_python.api import TodoistAPI
@@ -8,10 +9,12 @@ from gi.repository import Gio, GLib, GObject
 
 
 class TodoistWorker(GObject.GObject):
-    def __init__(self, api: TodoistAPI):
+    def __init__(self, api: TodoistAPI, config: ConfigParser):
         super().__init__()
 
         self.api = api
+        self.config = config
+        self.filter = self.config["General"]["filter"]
 
     def get_tasks_async(self, callback: Callable):
         task = Gio.Task.new(self, None, callback, None)
@@ -38,7 +41,7 @@ class TodoistWorker(GObject.GObject):
             return
 
         try:
-            tasks = self.api.get_tasks(filter="today|overdue")
+            tasks = self.api.get_tasks(filter=self.filter)
         except Exception:
             task.return_error(GLib.Error("Failed to get tasks"))
         else:

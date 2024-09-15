@@ -20,7 +20,8 @@ sources = [
   'statusicon.py',
   'todoist_worker.py',
   'window.py',
-  'main.py'
+  'main.py',
+  'style.css' # shhh
 ]
 
 # Configure constants

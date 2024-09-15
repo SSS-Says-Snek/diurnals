@@ -143,8 +143,9 @@ class ConfigWindow(Adw.PreferencesDialog):
 
         self.set_content_width(1000)
         self.set_content_height(800)
+        self.connect("closed", self.save_preferences)
 
-        # Schedule page
+        # SCHEDULE PAGE
         schedule_page = Adw.PreferencesPage(title="Scheduling", icon_name="alarm-symbolic")
         self.schedule_group = Adw.PreferencesGroup(title="Routine")
 
@@ -163,9 +164,21 @@ class ConfigWindow(Adw.PreferencesDialog):
         schedule_page.add(self.schedule_group)
         self.add(schedule_page)
 
-        # A
+        # GENERAL PAGE
         general_page = Adw.PreferencesPage(title="General", icon_name="emblem-system-symbolic")
+        filter_group = Adw.PreferencesGroup(title="Filters")
+        self.filter_entry = Adw.EntryRow(title="Enter your Todoist filter here", text=self.config["General"]["filter"])
+        self.filter_entry.connect("entry-activated", lambda _: print("AAA"))
+        filter_group.add(self.filter_entry)
+
+        general_page.add(filter_group)
         self.add(general_page)
+
+    def save_preferences(self, _):
+        print("A")
+        self.config["General"]["filter"] = self.filter_entry.get_text()
+        with open(CONFIG_PATH, "w") as w:
+            self.config.write(w)
 
     def create_new_routine(self, _):
         routine_ids_unparsed = self.config["Routine"]
@@ -178,7 +191,7 @@ class ConfigWindow(Adw.PreferencesDialog):
                 routine_id = potential_routine_id
                 break
 
-        self.config["Routine"][str(routine_id)] = "day 23:59"
+        self.config["Routine"][str(routine_id)] = "day 23:59" # Set default time
         schedule_row = ScheduleRow(str(routine_id), self.delete_routine, self.config)
         self.schedule_group.add(schedule_row)
 

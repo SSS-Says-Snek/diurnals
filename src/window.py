@@ -1,6 +1,6 @@
 from collections.abc import Callable
 from configparser import ConfigParser
-from datetime import date
+from datetime import date, datetime, timedelta
 
 from gi.repository import Adw, Gtk
 from todoist_api_python.api import TodoistAPI
@@ -13,15 +13,16 @@ from src.todoist_worker import TodoistWorker
 class TodoistElement(Gtk.ListBoxRow):
     def __init__(
         self,
-        todoist_task: Task,
+        task: Task,
         callback: Callable[[Gtk.CheckButton, "TodoistElement"], None],
         *args,
         **kwargs,
     ):
         super().__init__(*args, **kwargs)
-        self.todoist_task = todoist_task
+        self.task = task
 
         self.set_selectable(False)
+        self.due_date = None
 
         hbox = Gtk.Box(
             orientation=Gtk.Orientation.HORIZONTAL,
@@ -31,13 +32,57 @@ class TodoistElement(Gtk.ListBoxRow):
             margin_top=6,
             margin_bottom=6,
         )
+        vbox = Gtk.Box(
+            orientation=Gtk.Orientation.VERTICAL,
+            spacing=6,
+            halign=Gtk.Align.FILL
+        )
         self.check_button = Gtk.CheckButton()
         self.check_button.connect("toggled", lambda button: callback(button, self))
 
-        label = Gtk.Label(label=todoist_task.content)
+        label = Gtk.Label(label=task.content, halign=Gtk.Align.START)
+        vbox.append(label)
+        if self.task.due is not None: # Set due date label
+            label = "Due {}"
+            css_classes = ["due-date"]
+            due_date_str = self.task.due.date
+            self.due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+
+            days_left = self.due_date - date.today()
+            if days_left < timedelta(days=0):
+                label = "Overdue"
+                css_classes.append("overdue")
+            elif days_left == timedelta(days=0):
+                due_date_str = "today"
+                css_classes.append("due-today")
+            elif days_left < timedelta(days=7): # If less than a week, you can just refer to it by the weekday
+                due_date_str = self.due_date.strftime("%A")
+            else:
+                due_date_str = self.due_date.strftime("%b %-d")
+
+            due_date_label = Gtk.Label(label=label.format(due_date_str), halign=Gtk.Align.START) # Stupid noqa idk
+            due_date_label.set_css_classes(css_classes)
+            vbox.append(due_date_label)
+        
         hbox.append(self.check_button)
-        hbox.append(label)
+        hbox.append(vbox)
         self.set_child(hbox)
+
+    @staticmethod
+    def sort_rows(left: "TodoistElement", right: "TodoistElement"):
+        if left.due_date is None and right.due_date is None: # If there's no due date for both, they're equal
+            return 0
+        elif left.due_date is not None and right.due_date is None: # If L has due date, but R doesn't, L gets moved up
+            return -1
+        elif left.due_date is None and right.due_date is not None: # If R has due date, but L doesn't, L gets moved down
+            return 1
+        elif left.due_date is not None and right.due_date is not None: # for the type hint
+            if left.due_date < right.due_date:
+                return -1
+            elif left.due_date == right.due_date:
+                return 0
+            elif left.due_date > right.due_date:
+                return 1
 
 
 class TodoistWindow(Adw.ApplicationWindow):
@@ -50,7 +95,7 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.set_hide_on_close(True)
 
         self.api = TodoistAPI(api_key)
-        self.todoist_worker = TodoistWorker(self.api)  # Concurrent
+        self.todoist_worker = TodoistWorker(self.api, config)  # Concurrent
 
         self.config = config
 
@@ -79,6 +124,7 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.listbox.add_css_class("boxed-list")
         self.listbox.props.selection_mode = Gtk.SelectionMode.NONE
         self.listbox.set_vexpand(True)
+        self.listbox.set_sort_func(TodoistElement.sort_rows)
         box.append(self.listbox)
 
         # Get tasks and add them
@@ -110,10 +156,10 @@ class TodoistWindow(Adw.ApplicationWindow):
 
     def complete_selected_tasks(self, todoist_element: TodoistElement, task_ids: list[str]):
         if todoist_element.check_button.get_active():
-            task_ids.append(todoist_element.todoist_task.id)
+            task_ids.append(todoist_element.task.id)
 
     def update_date(self):
-        formatted_date = date.today().strftime("%B %d, %Y")
+        formatted_date = datetime.now().strftime("%B %d, %Y")
         self.set_title(f"Tasks for {formatted_date}")
 
     def sync_tasks(self):
@@ -130,7 +176,7 @@ class TodoistWindow(Adw.ApplicationWindow):
     def on_close_button(self, _):
         task_ids: list[str] = []
         for widget_to_remove in self.widgets_to_remove:
-            task_ids.append(widget_to_remove.todoist_task.id)
+            task_ids.append(widget_to_remove.task.id)
             self.listbox.remove(widget_to_remove)
         self.widgets_to_remove.clear()
         self.todoist_worker.complete_tasks_async(task_ids, error_callback=self.on_complete_tasks_failed)

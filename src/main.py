@@ -1,11 +1,12 @@
 from configparser import ConfigParser
+from pathlib import Path
 
 import gi
 import schedule
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GLib
+from gi.repository import Adw, GLib, Gdk, Gtk
 
 from src.constants import API_KEY_PATH, APPLICATION_ID, CONFIG_PATH
 from src.api_dialog import APIKeyDialog
@@ -22,6 +23,7 @@ class TodoistDailies(Adw.Application):
         # Creates new config file if doesn't exist, otherwise just read from it
         if not CONFIG_PATH.exists():
             self.config["Routine"] = {}
+            self.config["General"] = {"filter": "today|overdue"}
             with open(CONFIG_PATH, "w") as w:
                 self.config.write(w)
         else:
@@ -42,6 +44,13 @@ class TodoistDailies(Adw.Application):
 
         GLib.timeout_add(1000, self.run_schedule)
         window.connect("destroy", lambda _: self.quit())  # Actually ends
+
+        # Load CSS
+        css_provider = Gtk.CssProvider()
+        css_provider.load_from_path(str(Path(__file__).parent / "style.css"))
+        display = Gdk.Display.get_default()
+        if display is not None:
+            Gtk.StyleContext.add_provider_for_display(display, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
         for routine in config["Routine"].values():
             day, time = routine.split()
