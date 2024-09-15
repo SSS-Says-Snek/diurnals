@@ -4,7 +4,7 @@ from datetime import datetime
 
 from gi.repository import Adw, Gtk
 
-from todoist_dailies.constants import CONFIG_PATH
+from src.constants import CONFIG_PATH
 
 
 class ScheduleRow(Adw.ActionRow):

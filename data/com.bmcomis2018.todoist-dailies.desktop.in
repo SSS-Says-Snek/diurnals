@@ -1,0 +1,10 @@
+[Desktop Entry]
+Name=Todoist Dailies
+Comment=Receive a daily popup to notify about upcoming Todoist tasks
+Exec=todoist-dailies
+Icon=com.bmcomis2018.todoist-dailies
+Terminal=false
+Type=Application
+
+Keywords=Productivity;
+Categories=Gtk;

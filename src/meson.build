@@ -10,7 +10,7 @@ conf = configuration_data()
 conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
 conf.set('BUILD_TYPE', get_option('buildtype'))
 conf.set('pkgdatadir', pkgdatadir)
-conf.set('APP_ID', 'com.bmcomis2018.todoist-dailies')
+conf.set('APP_ID', application_id)
 conf.set('PYTHON', py_installation.full_path())
 
 sources = [

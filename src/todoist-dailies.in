@@ -7,4 +7,4 @@ sys.path.insert(1, pkgdatadir)
 if __name__ == "__main__":
     from src import main
 
-    main.real_main()
+    main.main()
