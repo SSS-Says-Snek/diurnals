@@ -6,10 +6,10 @@ import schedule
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, GLib, Gdk, Gtk
+from gi.repository import Adw, Gdk, GLib, Gtk
 
-from src.constants import API_KEY_PATH, APPLICATION_ID, CONFIG_PATH
 from src.api_dialog import APIKeyDialog
+from src.constants import API_KEY_PATH, APPLICATION_ID, CONFIG_PATH
 from src.window import TodoistWindow
 
 
@@ -86,6 +86,7 @@ class TodoistDailies(Adw.Application):
     def run_schedule():
         schedule.run_pending()
         return True
+
 
 def main():
     app = TodoistDailies(application_id=APPLICATION_ID)

@@ -191,7 +191,7 @@ class ConfigWindow(Adw.PreferencesDialog):
                 routine_id = potential_routine_id
                 break
 
-        self.config["Routine"][str(routine_id)] = "day 23:59" # Set default time
+        self.config["Routine"][str(routine_id)] = "day 23:59"  # Set default time
         schedule_row = ScheduleRow(str(routine_id), self.delete_routine, self.config)
         self.schedule_group.add(schedule_row)
 

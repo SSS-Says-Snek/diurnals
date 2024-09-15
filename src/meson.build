@@ -19,6 +19,7 @@ sources = [
   'config_window.py',
   'statusicon.py',
   'todoist_worker.py',
+  'todoist_element.py',
   'window.py',
   'main.py',
   'style.css' # shhh
