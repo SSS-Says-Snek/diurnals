@@ -1,3 +1,7 @@
+.window-box {
+  margin: 24px;
+}
+
 .due-date {
   color: #77767b;
 }

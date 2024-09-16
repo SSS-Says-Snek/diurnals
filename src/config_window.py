@@ -23,13 +23,13 @@ class ScheduleRow(Adw.ActionRow):
 
     AM_PM_OPTIONS = ["PM", "AM"]
 
-    def __init__(self, routine_id: str, delete_button_callback: Callable, config: ConfigParser, *args, **kwargs):
+    def __init__(self, routine_id: str, on_delete_button_press: Callable, config: ConfigParser, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.id = routine_id
         self.config = config
 
-        self.delete_button_callback = delete_button_callback
+        self.delete_button_callback = on_delete_button_press
         self.day_option = Gtk.DropDown.new_from_strings(self.DAY_OPTIONS)
         self.am_pm_option = Gtk.DropDown.new_from_strings(self.AM_PM_OPTIONS)
 
@@ -69,7 +69,8 @@ class ScheduleRow(Adw.ActionRow):
         self.delete_button.set_icon_name("user-trash-symbolic")
 
         # Syncs config file to widget
-        day, time = self.config["Routine"][self.id].split()
+        self.old_values = self.config["Routine"][self.id]
+        day, time = self.old_values.split()
         day = day.replace("_", " ")
         time = self.convert_24hr_to_12hr(time)
         hour, minute, am_pm = time.split()
@@ -134,12 +135,18 @@ class ScheduleRow(Adw.ActionRow):
         with open(CONFIG_PATH, "w") as w:
             self.config.write(w)
 
+    def check_if_updated(self):
+        if self.get_options() != self.old_values:
+            return True
+        return False
+
 
 class ConfigWindow(Adw.PreferencesDialog):
-    def __init__(self, config: ConfigParser, *args, **kwargs):
+    def __init__(self, config: ConfigParser, banner: Adw.Banner, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
         self.config = config
+        self.banner = banner
         self.set_content_width(1000)
         self.set_content_height(800)
         self.connect("closed", self.save_preferences)
@@ -156,8 +163,10 @@ class ConfigWindow(Adw.PreferencesDialog):
         add_schedule_button.connect("clicked", self.create_new_routine)
         self.schedule_group.set_header_suffix(add_schedule_button)
 
+        self.schedule_rows: list[ScheduleRow] = []
         for routine_id in self.config["Routine"].keys():
             schedule_row = ScheduleRow(routine_id, self.delete_routine, self.config)
+            self.schedule_rows.append(schedule_row)
             self.schedule_group.add(schedule_row)
 
         schedule_page.add(self.schedule_group)
@@ -174,7 +183,19 @@ class ConfigWindow(Adw.PreferencesDialog):
         self.add(general_page)
 
     def save_preferences(self, _):
-        self.config["General"]["filter"] = self.filter_entry.get_text()
+        config_changed = False
+
+        if (old_text := self.filter_entry.get_text()) != self.config["General"]["filter"]:
+            self.config["General"]["filter"] = old_text
+            config_changed = True
+
+        for schedule_row in self.schedule_rows:
+            if schedule_row.check_if_updated():
+                config_changed = True
+
+        if config_changed:
+            self.banner.set_revealed(True)
+
         with open(CONFIG_PATH, "w") as w:
             self.config.write(w)
 
@@ -199,11 +220,3 @@ class ConfigWindow(Adw.PreferencesDialog):
             self.config.write(w)
 
         self.schedule_group.remove(row_self)
-
-    def display_save_dialog(self, _):
-        save_dialog = Adw.AlertDialog(title="Save Changes?")
-        save_dialog.add_response("save", "Save")
-        save_dialog.set_title("AAA")
-        save_dialog.set_body("Changes have been detected. Do you want to save and apply these?")
-        save_dialog.add_response("cancel", "Cancel")
-        save_dialog.present(self)

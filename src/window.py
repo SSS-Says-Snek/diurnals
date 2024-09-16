@@ -25,24 +25,27 @@ class TodoistWindow(Adw.ApplicationWindow):
 
         outer_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
         box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
-        box.props.margin_start = 24
-        box.props.margin_end = 24
-        box.props.margin_top = 24
-        box.props.margin_bottom = 24
+        box.add_css_class("window-box")
 
         # Header
         self.header_bar = Adw.HeaderBar()
         self.header_bar.add_css_class("flat")
         self.update_date()
-
         outer_box.append(self.header_bar)
+
+        # Banner
+        self.banner = Adw.Banner(title="Changes have been applied. Close?")
+        self.banner.set_button_label("Close")
+        self.banner.connect("button-clicked", lambda _: self.destroy())
+        outer_box.append(self.banner)
+
         outer_box.append(box)
         self.set_content(outer_box)
 
         config_button = Gtk.Button.new_from_icon_name("open-menu-symbolic")
         config_button.connect("clicked", self.open_config)
         self.header_bar.pack_end(config_button)
-        
+
         # List box
         self.listbox = Gtk.ListBox()
         self.listbox.add_css_class("boxed-list")
@@ -50,12 +53,15 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.listbox.set_vexpand(True)
         self.listbox.set_sort_func(TodoistElement.sort_rows)  # type: ignore
 
-        e = Adw.StatusPage(title="No tasks to do currently", description="Enjoy the day with your free time!", icon_name="task-due-symbolic")
+        no_tasks_page = Adw.StatusPage(
+            title="No tasks to do currently",
+            description="Enjoy the day with your free time!",
+            icon_name="task-due-symbolic",
+        )
 
         self.main_content = Gtk.Stack()
         self.main_content.add_named(self.listbox, "task-list")
-        self.main_content.add_named(e, "no-tasks")
-
+        self.main_content.add_named(no_tasks_page, "no-tasks")
         box.append(self.main_content)
 
         # Get tasks and add them
@@ -63,9 +69,9 @@ class TodoistWindow(Adw.ApplicationWindow):
 
         # Bottom buttons
         self.close_button = Gtk.Button(label="Mark Done & Close")
-        self.quit_button = Gtk.Button(label="Quit Process")
-
         self.close_button.connect("clicked", self.on_close_button)
+
+        self.quit_button = Gtk.Button(label="Quit Process")
         self.quit_button.connect("clicked", lambda _: self.destroy())
 
         buttons_hbox = Gtk.Box(spacing=24, halign=Gtk.Align.END)
@@ -76,7 +82,7 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.widgets_to_remove: list[TodoistElement] = []
 
     def open_config(self, _):
-        config_window = ConfigWindow(self.config)
+        config_window = ConfigWindow(self.config, self.banner)
         config_window.present(self)
 
     def toggle_complete_task(self, button: Gtk.CheckButton, child: TodoistElement):
