@@ -1,0 +1,18 @@
+id: "com.bmcomis2018.todoist-dailies"
+runtime: "org.gnome.Platform"
+runtime-version: "46"
+sdk: "org.gnome.Sdk"
+command: "todoist-dailies"
+finish-args:
+  - --share=ipc
+  - --share=network
+  - --device=dri
+  - --socket=wayland
+modules:
+  - pip-dependencies.json
+  - name: todoist-dailies
+    buildsystem: meson
+    sources:
+      - type: git
+        url: "https://github.com/SSS-Says-Snek/todoist-dailies.git"
+        branch: "main"

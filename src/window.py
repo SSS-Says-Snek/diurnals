@@ -18,6 +18,7 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.set_default_size(1000, 800)
         self.set_hide_on_close(True)
 
+        self.api_key = api_key
         self.api = TodoistAPI(api_key)
         self.todoist_worker = TodoistWorker(self.api, config)  # Concurrent
 
@@ -80,10 +81,10 @@ class TodoistWindow(Adw.ApplicationWindow):
         box.append(buttons_hbox)
 
         self.widgets_to_remove: list[TodoistElement] = []
+        self.config_window = ConfigWindow(self.api_key, self.config, self.banner)
 
     def open_config(self, _):
-        config_window = ConfigWindow(self.config, self.banner)
-        config_window.present(self)
+        self.config_window.present(self)
 
     def toggle_complete_task(self, button: Gtk.CheckButton, child: TodoistElement):
         if button.get_active():
