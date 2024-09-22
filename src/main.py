@@ -31,8 +31,6 @@ class TodoistDailies(Adw.Application):
 
         # Creates new API token file if doesn't exist, other just read from it
         if not API_KEY_PATH.exists():
-            API_KEY_PATH.touch()
-
             api_dialog = APIKeyDialog(self, self.api_dialog_ok)
             api_dialog.present()
         else:

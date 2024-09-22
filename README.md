@@ -1,5 +1,5 @@
 <p align="center">
-    <img src="data/com.bmcomis2018.todoist-dailies.svg" width="200" alt="Todoist Dailies logo">
+    <img src="data/io.github.sss-says-snek.todoist-dailies.svg" width="200" alt="Todoist Dailies logo">
 </p>
 <h1 align="center">Todoist Dailies</h1>
 <p align="center">Receive a daily popup to notify about upcoming Todoist tasks. Simple and easy to configure</p>
