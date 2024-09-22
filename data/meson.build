@@ -1,6 +1,6 @@
 desktop_file = i18n.merge_file(
-  input: 'io.github.sss-says-snek.todoist-dailies.desktop.in',
-  output: 'io.github.sss-says-snek.todoist-dailies.desktop',
+  input: 'io.github.sss_says_snek.todoist-dailies.desktop.in',
+  output: 'io.github.sss_says_snek.todoist-dailies.desktop',
   install: true,
   install_dir: join_paths(get_option('datadir'), 'applications'),
 
@@ -17,6 +17,6 @@ endif
 
 # Install icons
 install_data(
-  'io.github.sss-says-snek.todoist-dailies.svg',
+  'io.github.sss_says_snek.todoist-dailies.svg',
   install_dir: join_paths(get_option('datadir'), 'icons/hicolor/scalable/apps')
 )

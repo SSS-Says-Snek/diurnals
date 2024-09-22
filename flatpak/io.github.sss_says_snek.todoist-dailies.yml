@@ -1,4 +1,4 @@
-id: "io.github.sss-says-snek.todoist-dailies"
+id: "io.github.sss_says_snek.todoist-dailies"
 runtime: "org.gnome.Platform"
 runtime-version: "46"
 sdk: "org.gnome.Sdk"
