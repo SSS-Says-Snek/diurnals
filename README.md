@@ -18,7 +18,7 @@
 ### Arch Linux (AUR)
 You can install Todoist Dailies with any AUR helper like `yay` or `paru`:
 ```
-yay -S todoist-dailies
+yay -S todoist_dailies
 ```
 
 ### Manual Installation
