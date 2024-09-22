@@ -9,7 +9,7 @@ dependency('glib-2.0')
 dependency('pygobject-3.0', version: '>= 3.29.1')
 
 i18n = import('i18n')
-application_id = 'io.github.sss_says_snek.todoist-dailies'
+application_id = 'io.github.sss_says_snek.todoist_dailies'
 
 subdir('data')
 subdir('src')

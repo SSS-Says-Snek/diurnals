@@ -2,7 +2,7 @@
 Name=Todoist Dailies
 Comment=Receive a daily popup to notify about upcoming Todoist tasks
 Exec=todoist-dailies
-Icon=io.github.sss_says_snek.todoist-dailies
+Icon=io.github.sss_says_snek.todoist_dailies
 Terminal=false
 Type=Application
 
