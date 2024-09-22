@@ -1,4 +1,4 @@
-project('todoist-dailies',
+project('todoist_dailies',
   version: '0.0.2',
   meson_version: '>= 0.55.0'
 )

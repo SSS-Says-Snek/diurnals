@@ -2,7 +2,7 @@ id: "io.github.sss_says_snek.todoist_dailies"
 runtime: "org.gnome.Platform"
 runtime-version: "46"
 sdk: "org.gnome.Sdk"
-command: "todoist-dailies"
+command: "todoist_dailies"
 finish-args:
   - --share=ipc
   - --share=network
@@ -10,9 +10,9 @@ finish-args:
   - --socket=wayland
 modules:
   - pip-dependencies.json
-  - name: todoist-dailies
+  - name: todoist_dailies
     buildsystem: meson
     sources:
       - type: git
-        url: "https://github.com/SSS-Says-Snek/todoist-dailies.git"
+        url: "https://github.com/SSS-Says-Snek/todoist_dailies.git"
         branch: "main"

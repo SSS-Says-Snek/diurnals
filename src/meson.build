@@ -38,8 +38,8 @@ install_data(sources, install_dir: moduledir)
 
 # Configure todoist dailies bin
 configure_file(
-  input: 'todoist-dailies.in',
-  output: 'todoist-dailies',
+  input: 'todoist_dailies.in',
+  output: 'todoist_dailies',
   configuration: conf,
 
   install: true,
