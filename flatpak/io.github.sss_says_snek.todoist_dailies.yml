@@ -8,6 +8,7 @@ finish-args:
   - --share=network
   - --device=dri
   - --socket=wayland
+  - --socket=fallback-x11
 modules:
   - pip-dependencies.json
   - name: todoist_dailies
@@ -16,3 +17,4 @@ modules:
       - type: git
         url: "https://github.com/SSS-Says-Snek/todoist_dailies.git"
         branch: "main"
+
