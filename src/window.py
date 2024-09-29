@@ -1,4 +1,3 @@
-from configparser import ConfigParser
 from datetime import datetime
 
 from gi.repository import Adw, Gtk
@@ -8,9 +7,12 @@ from src.config_window import ConfigWindow
 from src.todoist_element import TodoistElement
 from src.todoist_worker import TodoistWorker
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from src.main import TodoistDailies
 
 class TodoistWindow(Adw.ApplicationWindow):
-    def __init__(self, api_key: str, config: ConfigParser, application: Adw.Application, *args, **kwargs):
+    def __init__(self, api_key: str, application: "TodoistDailies", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.app = application
         self.set_application(self.app)
@@ -18,19 +20,16 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.set_default_size(1000, 800)
         self.set_hide_on_close(True)
 
+        self.settings = application.settings
         self.api_key = api_key
         self.api = TodoistAPI(api_key)
-        self.todoist_worker = TodoistWorker(self.api, config)  # Concurrent
-
-        self.config = config
+        self.todoist_worker = TodoistWorker(self.api, self.settings)  # Concurrent
 
         outer_box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL)
-        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, spacing=24)
-        box.add_css_class("window-box")
+        box = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, css_classes=["window-box"], spacing=24)
 
         # Header
-        self.header_bar = Adw.HeaderBar()
-        self.header_bar.add_css_class("flat")
+        self.header_bar = Adw.HeaderBar(css_classes=["flat"])
         self.update_date()
         outer_box.append(self.header_bar)
 
@@ -81,7 +80,7 @@ class TodoistWindow(Adw.ApplicationWindow):
         box.append(buttons_hbox)
 
         self.widgets_to_remove: list[TodoistElement] = []
-        self.config_window = ConfigWindow(self.api_key, self.config, self.banner)
+        self.config_window = ConfigWindow(self)
 
     def open_config(self, _):
         self.config_window.present(self)

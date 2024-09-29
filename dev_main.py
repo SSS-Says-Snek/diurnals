@@ -2,4 +2,4 @@
 
 from src import main
 
-main.main()
+main.main(dev=True)

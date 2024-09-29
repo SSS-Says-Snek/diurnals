@@ -1,5 +1,4 @@
 from collections.abc import Callable
-from configparser import ConfigParser
 
 import gi
 from todoist_api_python.api import TodoistAPI
@@ -9,12 +8,12 @@ from gi.repository import Gio, GLib, GObject
 
 
 class TodoistWorker(GObject.GObject):
-    def __init__(self, api: TodoistAPI, config: ConfigParser):
+    def __init__(self, api: TodoistAPI, settings: Gio.Settings):
         super().__init__()
 
         self.api = api
-        self.config = config
-        self.filter = self.config["General"]["filter"]
+        self.settings = settings
+        self.filter = self.settings.get_string("tasks-filter")
 
     def get_tasks_async(self, callback: Callable):
         task = Gio.Task.new(self, None, callback, None)

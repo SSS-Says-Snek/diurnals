@@ -1,18 +1,19 @@
-from configparser import ConfigParser
+from gi.repository import Adw, Gtk, GLib
 
-from gi.repository import Adw, Gtk
-
-from src.constants import CONFIG_PATH, API_KEY_PATH
+from src.constants import API_KEY_PATH
 from src.config_schedule_row import ScheduleRow
 
+from typing import TYPE_CHECKING
+if TYPE_CHECKING:
+    from src.window import TodoistWindow
 
 class ConfigWindow(Adw.PreferencesDialog):
-    def __init__(self, api_key: str, config: ConfigParser, banner: Adw.Banner, *args, **kwargs):
+    def __init__(self, parent: "TodoistWindow", *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.api_key = api_key
-        self.config = config
-        self.banner = banner
+        self.api_key = parent.api_key
+        self.banner = parent.banner
+        self.settings = parent.settings
         self.connect("closed", self.save_preferences)
 
         # SCHEDULE PAGE
@@ -27,11 +28,13 @@ class ConfigWindow(Adw.PreferencesDialog):
         add_schedule_button.connect("clicked", self.create_new_routine)
         self.schedule_group.set_header_suffix(add_schedule_button)
 
+        self.routines = self.settings.get_value("routines").unpack()
         self.schedule_rows: list[ScheduleRow] = []
-        for routine_id in self.config["Routine"].keys():
-            schedule_row = ScheduleRow(routine_id, self.delete_routine, self.config)
+        for routine in self.routines:
+            schedule_row = ScheduleRow(routine, self.delete_routine)
             self.schedule_rows.append(schedule_row)
             self.schedule_group.add(schedule_row)
+        self.old_schedule_rows = self.schedule_rows.copy()
 
         schedule_page.add(self.schedule_group)
         self.add(schedule_page)
@@ -39,7 +42,7 @@ class ConfigWindow(Adw.PreferencesDialog):
         # GENERAL PAGE
         general_page = Adw.PreferencesPage(title="General", icon_name="emblem-system-symbolic")
         filter_group = Adw.PreferencesGroup(title="Filters")
-        self.filter_entry = Adw.EntryRow(title="Enter your Todoist filter", text=self.config["General"]["filter"])
+        self.filter_entry = Adw.EntryRow(title="Enter your Todoist filter", text=self.settings.get_string("tasks-filter"))
         filter_group.add(self.filter_entry)
 
         general_group = Adw.PreferencesGroup(title="General")
@@ -54,8 +57,8 @@ class ConfigWindow(Adw.PreferencesDialog):
         """Checks if config changed; if did, reveal banner and save to files"""
         config_changed = False
 
-        if (new_text := self.filter_entry.get_text()) != self.config["General"]["filter"]:
-            self.config["General"]["filter"] = new_text
+        if (new_text := self.filter_entry.get_text()) != self.settings.get_string("tasks-filter"):
+            self.settings.set_string("tasks-filter", new_text)
             config_changed = True
         if (new_api_key := self.api_key_entry.get_text()) != self.get_file_api_key():
             API_KEY_PATH.write_text(f"API_KEY={new_api_key}")
@@ -63,33 +66,27 @@ class ConfigWindow(Adw.PreferencesDialog):
 
         for schedule_row in self.schedule_rows:
             if schedule_row.check_if_updated():
+                idx = self.routines.index(schedule_row.old_values)
+                self.routines[idx] = schedule_row.get_options()
                 config_changed = True
+        if len(self.old_schedule_rows) != len(self.schedule_rows):
+            print("AHA")
+            config_changed = True
 
         if config_changed:
+            self.settings.set_value("routines", GLib.Variant("as", self.routines))
             self.banner.set_revealed(True)
-        with open(CONFIG_PATH, "w") as w:
-            self.config.write(w)
 
     def create_new_routine(self, _):
-        routine_ids_unparsed = self.config["Routine"]
-        routine_ids = set((int(key) for key in routine_ids_unparsed.keys()))
+        self.routines.append("day 23:59")
 
-        routine_id = 0
-        # Iterates +1 to include maximum, +1 to include room for extra
-        for potential_routine_id in range(max(routine_ids) + 1 + 1):
-            if potential_routine_id not in routine_ids:
-                routine_id = potential_routine_id
-                break
-
-        self.config["Routine"][str(routine_id)] = "day 23:59"  # Set default time
-        schedule_row = ScheduleRow(str(routine_id), self.delete_routine, self.config)
+        schedule_row = ScheduleRow("day 23:59", self.delete_routine)
+        self.schedule_rows.append(schedule_row)
         self.schedule_group.add(schedule_row)
 
     def delete_routine(self, row_self: ScheduleRow):
-        del self.config["Routine"][row_self.id]
-        with open(CONFIG_PATH, "w") as w:
-            self.config.write(w)
-
+        self.routines.remove(row_self.old_values)
+        self.schedule_rows.remove(row_self)
         self.schedule_group.remove(row_self)
 
     @staticmethod
