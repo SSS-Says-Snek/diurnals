@@ -1,10 +1,7 @@
 from collections.abc import Callable
-from configparser import ConfigParser
 from datetime import datetime
 
 from gi.repository import Adw, Gtk
-
-from src.constants import CONFIG_PATH
 
 class ScheduleRow(Adw.ActionRow):
     DAY_OPTIONS = [
@@ -22,18 +19,14 @@ class ScheduleRow(Adw.ActionRow):
 
     AM_PM_OPTIONS = ["PM", "AM"]
 
-    def __init__(self, routine_id: str, on_delete_button_press: Callable, config: ConfigParser, *args, **kwargs):
+    def __init__(self, routine: str, on_delete_button_press: Callable, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.id = routine_id
-        self.config = config
+        self.old_values = routine
 
         self.delete_button_callback = on_delete_button_press
         self.day_option = Gtk.DropDown.new_from_strings(self.DAY_OPTIONS)
         self.am_pm_option = Gtk.DropDown.new_from_strings(self.AM_PM_OPTIONS)
-
-        self.day_option.connect("notify::selected", self.write_to_config)
-        self.am_pm_option.connect("notify::selected", self.write_to_config)
 
         day_child = self.day_option.get_first_child()
         if day_child is not None:
@@ -50,15 +43,14 @@ class ScheduleRow(Adw.ActionRow):
             adjustment=Gtk.Adjustment(value=11, lower=1, upper=12, step_increment=1),
         )
         self.hour_option.connect("output", self.adjust_output)
-        self.hour_option.connect("value-changed", self.write_to_config)
 
+        # Minute
         self.minute_option = Gtk.SpinButton(
             css_classes=["flat"],
             orientation=Gtk.Orientation.VERTICAL,
             adjustment=Gtk.Adjustment(value=59, lower=0, upper=59, step_increment=1),
         )
         self.minute_option.connect("output", self.adjust_output)
-        self.minute_option.connect("value-changed", self.write_to_config)
 
         # Delete button
         self.delete_button = Gtk.Button(
@@ -68,8 +60,7 @@ class ScheduleRow(Adw.ActionRow):
         self.delete_button.set_icon_name("user-trash-symbolic")
 
         # Syncs config file to widget
-        self.old_values = self.config["Routine"][self.id]
-        day, time = self.old_values.split()
+        day, time = routine.split()
         day = day.replace("_", " ")
         time = self.convert_24hr_to_12hr(time)
         hour, minute, am_pm = time.split()
@@ -128,11 +119,6 @@ class ScheduleRow(Adw.ActionRow):
             result += self.convert_12hr_to_24hr(f"{hour}:{minute} {am_pm}")
 
         return result
-
-    def write_to_config(self, *_):
-        self.config["Routine"][self.id] = self.get_options()
-        with open(CONFIG_PATH, "w") as w:
-            self.config.write(w)
 
     def check_if_updated(self):
         if self.get_options() != self.old_values:

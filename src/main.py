@@ -1,4 +1,3 @@
-from configparser import ConfigParser
 from pathlib import Path
 
 import gi
@@ -6,39 +5,30 @@ import schedule
 
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
-from gi.repository import Adw, Gdk, GLib, Gtk
+from gi.repository import Adw, Gdk, GLib, Gio, Gtk
 
 from src.api_dialog import APIKeyDialog
-from src.constants import API_KEY_PATH, APPLICATION_ID, CONFIG_PATH
+from src.constants import API_KEY_PATH, APPLICATION_ID
 from src.window import TodoistWindow
-
 
 class TodoistDailies(Adw.Application):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        self.config = ConfigParser()
+        if (application_id := self.get_application_id()) is not None:
+            self.settings = Gio.Settings(schema_id=application_id)
 
     def do_activate(self):
-        # Creates new config file if doesn't exist, otherwise just read from it
-        if not CONFIG_PATH.exists():
-            self.config["Routine"] = {}
-            self.config["General"] = {"filter": "today|overdue"}
-            with open(CONFIG_PATH, "w") as w:
-                self.config.write(w)
-        else:
-            self.config.read(CONFIG_PATH)
-
         # Creates new API token file if doesn't exist, other just read from it
         if not API_KEY_PATH.exists():
             api_dialog = APIKeyDialog(self, self.api_dialog_ok)
             api_dialog.present()
         else:
             api_key = API_KEY_PATH.read_text().replace("API_KEY=", "")
-            self.main(api_key, self.config)
+            self.main(api_key)
 
-    def main(self, api_key: str, config: ConfigParser):
-        window = TodoistWindow(api_key, config=config, application=self)
+    def main(self, api_key: str):
+        window = TodoistWindow(api_key, application=self)
 
         GLib.timeout_add(1000, self.run_schedule)
         window.connect("destroy", lambda _: self.quit())  # Actually ends
@@ -50,7 +40,7 @@ class TodoistDailies(Adw.Application):
         if display is not None:
             Gtk.StyleContext.add_provider_for_display(display, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
 
-        for routine in config["Routine"].values():
+        for routine in self.settings.get_value("routines").unpack():
             day, time = routine.split()
 
             schedule_days_dict = {
@@ -78,7 +68,7 @@ class TodoistDailies(Adw.Application):
 
     def api_dialog_ok(self, api_key: str):
         API_KEY_PATH.write_text(f"API_KEY={api_key}")
-        self.main(api_key, self.config)
+        self.main(api_key)
 
     @staticmethod
     def run_schedule():
@@ -86,8 +76,12 @@ class TodoistDailies(Adw.Application):
         return True
 
 
-def main():
-    app = TodoistDailies(application_id=APPLICATION_ID)
+def main(dev=False):
+    if dev:
+        application_id = "io.github.sss_says_snek.todoist_dailies"
+    else:
+        application_id = APPLICATION_ID
+    app = TodoistDailies(application_id=application_id)
 
     app.run(None)
 
