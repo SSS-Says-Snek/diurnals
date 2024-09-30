@@ -1,4 +1,4 @@
-project('todoist_dailies',
+project('diurnals',
   version: '0.0.2',
   meson_version: '>= 0.57.0'
 )
@@ -11,9 +11,9 @@ dependency('pygobject-3.0', version: '>= 3.29.1')
 i18n = import('i18n')
 gnome = import('gnome')
 
-application_id = 'io.github.sss_says_snek.todoist_dailies' # APPLICATION ID
+application_id = 'io.github.sss_says_snek.diurnals' # APPLICATION ID
 pkgdatadir = join_paths(get_option('prefix'), get_option('datadir'), meson.project_name())
-moduledir = join_paths(pkgdatadir, 'src') # e.g /usr/local/share/todoist-dailies/src
+moduledir = join_paths(pkgdatadir, 'src') # e.g /usr/local/share/diurnals/src
 
 py_mod = import('python')
 py_installation = py_mod.find_installation('python3', modules: ['schedule', 'todoist_api_python']) # Python dependencies

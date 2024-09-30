@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- Copyright 2024-present SSS-Says-Snek -->
 <component type="desktop-application">
-  <id>io.github.sss_says_snek.todoist_dailies</id>
+  <id>io.github.sss_says_snek.diurnals</id>
   <metadata_license>CC0-1.0</metadata_license>
   <project_license>MIT</project_license>
-  <name>Todoist Dailies</name>
+  <name>Diurnals</name>
   <summary>Receive a daily popup to notify about upcoming Todoist tasks</summary>
 
   <developer id="io.github.sss_says_snek">
@@ -18,24 +18,24 @@
       <li>Customizable popup times</li>
       <li>Apply custom filters for tasks</li>
     </ul>
-    <p>Todoist Dailies is not affiliated with or created by Doist</p>
+    <p>Diurnals is not affiliated with or created by Doist</p>
   </description>
-  <launchable type="desktop-id">io.github.sss_says_snek.todoist_dailies.desktop</launchable>
+  <launchable type="desktop-id">io.github.sss_says_snek.diurnals.desktop</launchable>
   <branding>
     <color type="primary" scheme_preference="light">#cdab8f</color>
     <color type="primary" scheme_preference="dark">#241f31</color>
   </branding>
   <content_rating type="oars-1.1" />
 
-  <url type="homepage">https://github.com/SSS-Says-Snek/todoist_dailies</url>
+  <url type="homepage">https://github.com/SSS-Says-Snek/diurnals</url>
 
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/SSS-Says-Snek/todoist_dailies/refs/heads/main/screenshots/tasks-light.png</image>
+      <image>https://raw.githubusercontent.com/SSS-Says-Snek/diurnals/refs/heads/main/screenshots/tasks-light.png</image>
       <caption>The tasks screen on light mode</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/SSS-Says-Snek/todoist_dailies/refs/heads/main/screenshots/tasks-dark.png</image>
+      <image>https://raw.githubusercontent.com/SSS-Says-Snek/diurnals/refs/heads/main/screenshots/tasks-dark.png</image>
       <caption>The tasks screen on dark mode</caption>
     </screenshot>
   </screenshots>

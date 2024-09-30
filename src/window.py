@@ -10,10 +10,10 @@ from src.todoist_worker import TodoistWorker
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from src.main import TodoistDailies
+    from src.main import Diurnals
 
 class TodoistWindow(Adw.ApplicationWindow):
-    def __init__(self, api_key: str, application: "TodoistDailies", *args, **kwargs):
+    def __init__(self, api_key: str, application: "Diurnals", *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.app = application
         self.set_application(self.app)
@@ -46,7 +46,7 @@ class TodoistWindow(Adw.ApplicationWindow):
         # Menu and config button
         menu = Gio.Menu()
         menu.append("Preferences", "app.preferences")
-        menu.append("About Todoist Dailies", "app.about")
+        menu.append("About Diurnals", "app.about")
 
         config_button = Gtk.MenuButton(icon_name="open-menu-symbolic", menu_model=menu)
         self.header_bar.pack_end(config_button)
@@ -100,7 +100,7 @@ class TodoistWindow(Adw.ApplicationWindow):
     def open_about_dialog(self, *_):
         about_dialog = Adw.AboutDialog(
             application_icon=APPLICATION_ID,
-            application_name="Todoist Dailies",
+            application_name="Diurnals",
             version=VERSION,
             copyright="© 2024-present SSS-Says-Snek",
             license_type=Gtk.License.MIT_X11,
@@ -163,10 +163,10 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.listbox.show()
 
     def on_get_tasks_failed(self):
-        self._error_dialog("Todoist Dailies - Network Error", "Could not retrieve tasks!")
+        self._error_dialog("Diurnals - Network Error", "Could not retrieve tasks!")
 
     def on_complete_tasks_failed(self):
-        self._error_dialog("Todoist Dailies - Network Error", "Could not complete tasks!")
+        self._error_dialog("Diurnals - Network Error", "Could not complete tasks!")
 
     def _error_dialog(self, title: str, secondary_text: str):
         error_dialog = Adw.AlertDialog(heading=title, body=secondary_text)

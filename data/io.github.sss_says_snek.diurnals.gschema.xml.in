@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <schemalist>
-  <schema id="@APP_ID@" path="/io/github/sss_says_snek/todoist_dailies/">
+  <schema id="@APP_ID@" path="/io/github/sss_says_snek/diurnals/">
     <key name="tasks-filter" type="s">
       <default>'overdue | 7 days'</default>
     </key>

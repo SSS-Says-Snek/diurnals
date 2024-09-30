@@ -1,6 +1,6 @@
 # Bundle GResource file
-gnome.compile_resources('todoist_dailies',
-  'io.github.sss_says_snek.todoist_dailies.gresource.xml',
+gnome.compile_resources('diurnals',
+  '@0@.gresource.xml'.format(application_id),
   gresource_bundle: true,
   install: true,
   install_dir: pkgdatadir,
@@ -8,8 +8,8 @@ gnome.compile_resources('todoist_dailies',
 
 # Configure appstream metadata
 appstream_file = i18n.merge_file(
-  input: 'io.github.sss_says_snek.todoist_dailies.metainfo.xml.in',
-  output: 'io.github.sss_says_snek.todoist_dailies.metainfo.xml',
+  input: '@0@.metainfo.xml.in'.format(application_id),
+  output: '@0@.metainfo.xml'.format(application_id),
   install: true,
   install_dir: join_paths(get_option('datadir'), 'metainfo'),
 
@@ -18,8 +18,8 @@ appstream_file = i18n.merge_file(
 
 # Configure desktop file
 desktop_file = i18n.merge_file(
-  input: 'io.github.sss_says_snek.todoist_dailies.desktop.in',
-  output: 'io.github.sss_says_snek.todoist_dailies.desktop',
+  input: '@0@.desktop.in'.format(application_id),
+  output: '@0@.desktop'.format(application_id),
   install: true,
   install_dir: join_paths(get_option('datadir'), 'applications'),
 
@@ -29,8 +29,8 @@ desktop_file = i18n.merge_file(
 
 # Configure schemas
 configure_file(
-  input: 'io.github.sss_says_snek.todoist_dailies.gschema.xml.in',
-  output: 'io.github.sss_says_snek.todoist_dailies.gschema.xml',
+  input: '@0@.gschema.xml.in'.format(application_id),
+  output: '@0@.gschema.xml'.format(application_id),
   configuration: conf,
   install: true,
   install_dir: join_paths(get_option('datadir'), 'glib-2.0/schemas')
@@ -60,6 +60,6 @@ endif
 
 # Install icons
 install_data(
-  'io.github.sss_says_snek.todoist_dailies.svg',
+  '@0@.svg'.format(application_id),
   install_dir: join_paths(get_option('datadir'), 'icons/hicolor/scalable/apps')
 )

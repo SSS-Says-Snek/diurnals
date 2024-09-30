@@ -1,8 +1,8 @@
 [Desktop Entry]
-Name=Todoist Dailies
+Name=Diurnals
 Comment=Receive a daily popup to notify about upcoming Todoist tasks
-Exec=todoist_dailies
-Icon=io.github.sss_says_snek.todoist_dailies
+Exec=diurnals
+Icon=io.github.sss_says_snek.diurnals
 Terminal=false
 Type=Application
 

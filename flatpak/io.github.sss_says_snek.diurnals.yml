@@ -1,8 +1,8 @@
-id: "io.github.sss_says_snek.todoist_dailies"
+id: "io.github.sss_says_snek.diurnals"
 runtime: "org.gnome.Platform"
-runtime-version: "46"
+runtime-version: "47"
 sdk: "org.gnome.Sdk"
-command: "todoist_dailies"
+command: "diurnals"
 finish-args:
   - --share=ipc
   - --share=network
@@ -11,10 +11,10 @@ finish-args:
   - --socket=fallback-x11
 modules:
   - pip-dependencies.json
-  - name: todoist_dailies
+  - name: diurnals
     buildsystem: meson
     sources:
       - type: git
-        url: "https://github.com/SSS-Says-Snek/todoist_dailies.git"
+        url: "https://github.com/SSS-Says-Snek/diurnals.git"
         branch: "main"
 
