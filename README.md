@@ -5,10 +5,10 @@
 <p align="center">Receive a daily popup to notify about upcoming Todoist tasks. Simple and easy to configure</p>
 <p align="center">
     <img alt="Static Badge" src="https://img.shields.io/badge/Python-%233776ab?style=for-the-badge&logo=python&logoColor=ffffff">
-    <img alt="GitHub License" src="https://img.shields.io/github/license/SSS-Says-Snek/todoist_dailies?style=for-the-badge">
-    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/SSS-Says-Snek/todoist_dailies?style=for-the-badge">
-    <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/SSS-Says-Snek/todoist_dailies?style=for-the-badge">
-    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/SSS-Says-Snek/todoist_dailies?style=for-the-badge">
+    <img alt="GitHub License" src="https://img.shields.io/github/license/SSS-Says-Snek/diurnals?style=for-the-badge">
+    <img alt="GitHub Release" src="https://img.shields.io/github/v/release/SSS-Says-Snek/diurnals?style=for-the-badge">
+    <img alt="GitHub repo size" src="https://img.shields.io/github/repo-size/SSS-Says-Snek/diurnals?style=for-the-badge">
+    <img alt="GitHub last commit" src="https://img.shields.io/github/last-commit/SSS-Says-Snek/diurnals?style=for-the-badge">
 </p>
 
 ## Installation

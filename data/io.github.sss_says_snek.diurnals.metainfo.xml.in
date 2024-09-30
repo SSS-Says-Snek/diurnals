@@ -27,15 +27,15 @@
   </branding>
   <content_rating type="oars-1.1" />
 
-  <url type="homepage">https://github.com/SSS-Says-Snek/todoist_dailies</url>
+  <url type="homepage">https://github.com/SSS-Says-Snek/diurnals</url>
 
   <screenshots>
     <screenshot type="default">
-      <image>https://raw.githubusercontent.com/SSS-Says-Snek/todoist_dailies/refs/heads/main/screenshots/tasks-light.png</image>
+      <image>https://raw.githubusercontent.com/SSS-Says-Snek/diurnals/refs/heads/main/screenshots/tasks-light.png</image>
       <caption>The tasks screen on light mode</caption>
     </screenshot>
     <screenshot>
-      <image>https://raw.githubusercontent.com/SSS-Says-Snek/todoist_dailies/refs/heads/main/screenshots/tasks-dark.png</image>
+      <image>https://raw.githubusercontent.com/SSS-Says-Snek/diurnals/refs/heads/main/screenshots/tasks-dark.png</image>
       <caption>The tasks screen on dark mode</caption>
     </screenshot>
   </screenshots>

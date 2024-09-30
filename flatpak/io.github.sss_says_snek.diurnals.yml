@@ -15,6 +15,6 @@ modules:
     buildsystem: meson
     sources:
       - type: git
-        url: "https://github.com/SSS-Says-Snek/todoist_dailies.git"
+        url: "https://github.com/SSS-Says-Snek/diurnals.git"
         branch: "main"
 
