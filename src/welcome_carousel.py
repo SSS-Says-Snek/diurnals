@@ -10,10 +10,10 @@ from gi.repository import Gtk, Adw
 
 from typing import TYPE_CHECKING
 if TYPE_CHECKING:
-    from src.main import TodoistDailies
+    from src.main import Diurnals
 
 class WelcomeCarousel(Adw.ApplicationWindow):
-    def __init__(self, app: "TodoistDailies", finish_callback: Callable[[str], None]):
+    def __init__(self, app: "Diurnals", finish_callback: Callable[[str], None]):
         super().__init__(application=app, title="Welcome to Diurnals!")
 
         self.set_default_size(800, 600)
@@ -38,9 +38,9 @@ class WelcomeCarousel(Adw.ApplicationWindow):
 
         # 1st page: Welcome
         welcome = Gtk.Box(orientation=Gtk.Orientation.VERTICAL, vexpand=True, hexpand=True)
-        welcome_status = Adw.StatusPage(title="Welcome to Todoist Dailies!", description="Receive a daily popup to notify about upcoming Todoist tasks.")
+        welcome_status = Adw.StatusPage(title="Welcome to Diurnals!", description="Receive a daily popup to notify about upcoming Todoist tasks.")
 
-        app_icon = Gtk.Image.new_from_resource("/io/github/sss_says_snek/todoist_dailies/images/app_icon.svg")
+        app_icon = Gtk.Image.new_from_resource("/io/github/sss_says_snek/diurnals/images/app_icon.svg")
         app_icon.set_pixel_size(300)
         welcome.append(app_icon)
         welcome.append(welcome_status)

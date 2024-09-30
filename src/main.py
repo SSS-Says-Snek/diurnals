@@ -1,5 +1,3 @@
-from pathlib import Path
-
 import gi
 import schedule
 
@@ -12,7 +10,7 @@ from gi.repository import Adw, Gdk, GLib, Gio, Gtk
 from src.constants import API_KEY_PATH, APPLICATION_ID
 from src.window import TodoistWindow
 
-class TodoistDailies(Adw.Application):
+class Diurnals(Adw.Application):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
@@ -35,7 +33,7 @@ class TodoistDailies(Adw.Application):
 
         # Load CSS
         css_provider = Gtk.CssProvider()
-        css_provider.load_from_resource("/io/github/sss_says_snek/todoist_dailies/style.css")
+        css_provider.load_from_resource("/io/github/sss_says_snek/diurnals/style.css")
         display = Gdk.Display.get_default()
         if display is not None:
             Gtk.StyleContext.add_provider_for_display(display, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -77,7 +75,7 @@ class TodoistDailies(Adw.Application):
 
 
 def main():
-    app = TodoistDailies(application_id=APPLICATION_ID)
+    app = Diurnals(application_id=APPLICATION_ID)
 
     app.run(None)
 

@@ -2,7 +2,7 @@
 
 from src import main
 
-pkgdatadir = r"/usr/local/share/todoist_dailies"
+pkgdatadir = r"/usr/local/share/diurnals"
 
 import os
 import gi
@@ -10,7 +10,7 @@ import gi
 gi.require_version("Gio", "2.0")
 
 from gi.repository import Gio
-resource = Gio.Resource.load(os.path.join(pkgdatadir, 'todoist_dailies.gresource'))
+resource = Gio.Resource.load(os.path.join(pkgdatadir, 'diurnals.gresource'))
 resource._register() # type: ignore
 
 main.main()

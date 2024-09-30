@@ -9,7 +9,7 @@ if __name__ == "__main__":
 
     import os
     from gi.repository import Gio
-    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'todoist_dailies.gresource'))
+    resource = Gio.Resource.load(os.path.join(pkgdatadir, 'diurnals.gresource'))
     resource._register()
 
     main.main()

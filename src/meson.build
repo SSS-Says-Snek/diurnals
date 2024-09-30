@@ -2,7 +2,6 @@ sources = [
   '__init__.py',
   'config_window.py',
   'config_schedule_row.py',
-  'statusicon.py',
   'todoist_worker.py',
   'todoist_element.py',
   'welcome_carousel.py',
@@ -20,10 +19,10 @@ configure_file(
 
 install_data(sources, install_dir: moduledir)
 
-# Configure todoist dailies bin
+# Configure diurnals bin
 configure_file(
-  input: 'todoist_dailies.in',
-  output: 'todoist_dailies',
+  input: 'diurnals.in',
+  output: 'diurnals',
   configuration: conf,
 
   install: true,

@@ -1,7 +1,7 @@
 <p align="center">
-    <img src="data/io.github.sss_says_snek.todoist_dailies.svg" width="200" alt="Todoist Dailies logo">
+    <img src="data/io.github.sss_says_snek.diurnals.svg" width="200" alt="Diurnals logo">
 </p>
-<h1 align="center">Todoist Dailies</h1>
+<h1 align="center">Diurnals</h1>
 <p align="center">Receive a daily popup to notify about upcoming Todoist tasks. Simple and easy to configure</p>
 <p align="center">
     <img alt="Static Badge" src="https://img.shields.io/badge/Python-%233776ab?style=for-the-badge&logo=python&logoColor=ffffff">
@@ -16,13 +16,13 @@
 [![Packaging status](https://repology.org/badge/vertical-allrepos/todoist-dailies.svg)](https://repology.org/project/todoist-dailies/versions)
 
 ### Arch Linux (AUR)
-You can install Todoist Dailies with any AUR helper like `yay` or `paru`:
+You can install Diurnals with any AUR helper like `yay` or `paru`:
 ```
-yay -S todoist_dailies
+yay -S diurnals
 ```
 
 ### Manual Installation
-To build Todoist Dailies from source, the following dependencies is required:
+To build Diurnals from source, the following dependencies is required:
 - Meson (build dependency)
 - Python
 - Python libraries, whether installed from systemwide packages or from `pip`
