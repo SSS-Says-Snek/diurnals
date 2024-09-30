@@ -25,6 +25,7 @@ conf.set('localedir', join_paths(get_option('prefix'), get_option('localedir')))
 conf.set('BUILD_TYPE', get_option('buildtype'))
 conf.set('pkgdatadir', pkgdatadir)
 conf.set('APP_ID', application_id)
+conf.set('VERSION', meson.project_version())
 conf.set('PYTHON', py_installation.full_path())
 
 subdir('data')

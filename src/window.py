@@ -1,9 +1,10 @@
 from datetime import datetime
 
-from gi.repository import Adw, Gtk
+from gi.repository import Adw, Gio, Gtk
 from todoist_api_python.api import TodoistAPI
 
 from src.config_window import ConfigWindow
+from src.constants import APPLICATION_ID, VERSION
 from src.todoist_element import TodoistElement
 from src.todoist_worker import TodoistWorker
 
@@ -42,8 +43,12 @@ class TodoistWindow(Adw.ApplicationWindow):
         outer_box.append(box)
         self.set_content(outer_box)
 
-        config_button = Gtk.Button.new_from_icon_name("open-menu-symbolic")
-        config_button.connect("clicked", self.open_config)
+        # Menu and config button
+        menu = Gio.Menu()
+        menu.append("Preferences", "app.preferences")
+        menu.append("About Todoist Dailies", "app.about")
+
+        config_button = Gtk.MenuButton(icon_name="open-menu-symbolic", menu_model=menu)
         self.header_bar.pack_end(config_button)
 
         # List box
@@ -82,7 +87,28 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.widgets_to_remove: list[TodoistElement] = []
         self.config_window = ConfigWindow(self)
 
-    def open_config(self, _):
+        # Actions
+        about_action = Gio.SimpleAction.new("about")
+        about_action.connect("activate", self.open_about_dialog)
+
+        preferences_action = Gio.SimpleAction.new("preferences")
+        preferences_action.connect("activate", self.open_config)
+
+        self.app.add_action(about_action)
+        self.app.add_action(preferences_action)
+
+    def open_about_dialog(self, *_):
+        about_dialog = Adw.AboutDialog(
+            application_icon=APPLICATION_ID,
+            application_name="Todoist Dailies",
+            version=VERSION,
+            copyright="© 2024-present SSS-Says-Snek",
+            license_type=Gtk.License.MIT_X11,
+            developers=["SSS-Says-Snek"]
+        )
+        about_dialog.present(self)
+
+    def open_config(self, *_):
         self.config_window.present(self)
 
     def toggle_complete_task(self, button: Gtk.CheckButton, child: TodoistElement):

@@ -1,14 +1,13 @@
 sources = [
   '__init__.py',
-  'api_dialog.py',
   'config_window.py',
   'config_schedule_row.py',
   'statusicon.py',
   'todoist_worker.py',
   'todoist_element.py',
+  'welcome_carousel.py',
   'window.py',
   'main.py',
-  'style.css' # shhh
 ]
 
 # Configure constants

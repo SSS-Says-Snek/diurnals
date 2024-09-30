@@ -3,11 +3,12 @@ from pathlib import Path
 import gi
 import schedule
 
+from src.welcome_carousel import WelcomeCarousel
+
 gi.require_version("Gtk", "4.0")
 gi.require_version("Adw", "1")
 from gi.repository import Adw, Gdk, GLib, Gio, Gtk
 
-from src.api_dialog import APIKeyDialog
 from src.constants import API_KEY_PATH, APPLICATION_ID
 from src.window import TodoistWindow
 
@@ -15,14 +16,13 @@ class TodoistDailies(Adw.Application):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
 
-        if (application_id := self.get_application_id()) is not None:
-            self.settings = Gio.Settings(schema_id=application_id)
+        self.settings = Gio.Settings(schema_id=APPLICATION_ID)
 
     def do_activate(self):
-        # Creates new API token file if doesn't exist, other just read from it
+        # Calls welcome window when no API key, otherwise skips
         if not API_KEY_PATH.exists():
-            api_dialog = APIKeyDialog(self, self.api_dialog_ok)
-            api_dialog.present()
+            welcome_window = WelcomeCarousel(self, self.on_finish_welcome)
+            welcome_window.present()
         else:
             api_key = API_KEY_PATH.read_text().replace("API_KEY=", "")
             self.main(api_key)
@@ -35,7 +35,7 @@ class TodoistDailies(Adw.Application):
 
         # Load CSS
         css_provider = Gtk.CssProvider()
-        css_provider.load_from_path(str(Path(__file__).parent / "style.css"))
+        css_provider.load_from_resource("/io/github/sss_says_snek/todoist_dailies/style.css")
         display = Gdk.Display.get_default()
         if display is not None:
             Gtk.StyleContext.add_provider_for_display(display, css_provider, Gtk.STYLE_PROVIDER_PRIORITY_APPLICATION)
@@ -66,7 +66,7 @@ class TodoistDailies(Adw.Application):
 
         window.present()
 
-    def api_dialog_ok(self, api_key: str):
+    def on_finish_welcome(self, api_key: str):
         API_KEY_PATH.write_text(f"API_KEY={api_key}")
         self.main(api_key)
 
@@ -76,12 +76,8 @@ class TodoistDailies(Adw.Application):
         return True
 
 
-def main(dev=False):
-    if dev:
-        application_id = "io.github.sss_says_snek.todoist_dailies"
-    else:
-        application_id = APPLICATION_ID
-    app = TodoistDailies(application_id=application_id)
+def main():
+    app = TodoistDailies(application_id=APPLICATION_ID)
 
     app.run(None)
 

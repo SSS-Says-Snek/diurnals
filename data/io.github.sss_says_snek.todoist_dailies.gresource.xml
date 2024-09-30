@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<gresources>
+  <gresource prefix="/io/github/sss_says_snek/todoist_dailies">
+    <file>images/app_icon.svg</file>
+    <file>style.css</file>
+  </gresource>
+
+  <gresource prefix="/io/github/sss_says_snek/todoist_dailies/icons/scalable/emblems">
+    <file alias="key-symbolic.svg">icons/key-symbolic.svg</file>
+  </gresource>
+</gresources>

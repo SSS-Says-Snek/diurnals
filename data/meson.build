@@ -1,3 +1,11 @@
+# Bundle GResource file
+gnome.compile_resources('todoist_dailies',
+  'io.github.sss_says_snek.todoist_dailies.gresource.xml',
+  gresource_bundle: true,
+  install: true,
+  install_dir: pkgdatadir,
+)
+
 # Configure appstream metadata
 appstream_file = i18n.merge_file(
   input: 'io.github.sss_says_snek.todoist_dailies.metainfo.xml.in',
