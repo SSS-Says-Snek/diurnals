@@ -13,7 +13,7 @@
 
 ## Installation
 
-[![Packaging status](https://repology.org/badge/vertical-allrepos/todoist-dailies.svg)](https://repology.org/project/todoist-dailies/versions)
+[![Packaging status](https://repology.org/badge/vertical-allrepos/diurnals.svg)](https://repology.org/project/diurnals/versions)
 
 ### Arch Linux (AUR)
 You can install Diurnals with any AUR helper like `yay` or `paru`:
