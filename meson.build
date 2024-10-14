@@ -1,5 +1,5 @@
 project('diurnals',
-  version: '0.0.2',
+  version: '1.0',
   meson_version: '>= 0.57.0'
 )
 

@@ -12,13 +12,14 @@
   </developer>
 
   <description>
-    <p>Better track your tasks on Todoist with a popup that appears regularly.</p>
+    <p>Not keeping up with upcoming and overdue tasks? Better track your tasks on Todoist with a popup that appears regularly.</p>
     <p>Features:</p>
     <ul>
       <li>Customizable popup times</li>
       <li>Apply custom filters for tasks</li>
+      <li>Manage your tasks and your time more efficiently</li>
     </ul>
-    <p>Diurnals is not affiliated with or created by Doist</p>
+    <p>Note: Diurnals is not affiliated with or created by Doist</p>
   </description>
   <launchable type="desktop-id">io.github.sss_says_snek.diurnals.desktop</launchable>
   <branding>
@@ -26,6 +27,10 @@
     <color type="primary" scheme_preference="dark">#241f31</color>
   </branding>
   <content_rating type="oars-1.1" />
+
+  <releases>
+    <release version="1.0" date="2024-10-13"/>
+  </releases>
 
   <url type="homepage">https://github.com/SSS-Says-Snek/diurnals</url>
 
