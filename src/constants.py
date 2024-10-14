@@ -12,4 +12,4 @@ VERSION = "@VERSION@"
 # For developers running dev_main.py. Overwrites stuff temporarily
 if APPLICATION_ID == "@APP" + "_ID@":
     APPLICATION_ID = "io.github.sss_says_snek.diurnals"
-    VERSION = "1.0"
+    VERSION = "1.0.1"
