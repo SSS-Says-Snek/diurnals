@@ -13,6 +13,8 @@
 
 ## Installation
 
+[![Get it on Flathub](https://flathub.org/api/badge?svg&locale=en)](https://flathub.org/apps/io.github.sss_says_snek.diurnals)
+
 [![Packaging status](https://repology.org/badge/vertical-allrepos/diurnals.svg)](https://repology.org/project/diurnals/versions)
 
 ### Arch Linux (AUR)
