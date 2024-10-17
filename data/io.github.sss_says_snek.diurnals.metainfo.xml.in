@@ -23,9 +23,10 @@
   </description>
   <launchable type="desktop-id">io.github.sss_says_snek.diurnals.desktop</launchable>
   <branding>
-    <color type="primary" scheme_preference="light">#cdab8f</color>
-    <color type="primary" scheme_preference="dark">#241f31</color>
+    <color type="primary" scheme_preference="light">#edc785</color>
+    <color type="primary" scheme_preference="dark">#68128a</color>
   </branding>
+
   <content_rating type="oars-1.1" />
 
   <releases>
