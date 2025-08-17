@@ -1,1 +1,2 @@
 ruff==0.6.2
+pygobject_stubs==2.13.0

@@ -2,7 +2,7 @@
 
 from src import main
 
-pkgdatadir = r"/usr/local/share/diurnals"
+pkgdatadir = r"/usr/share/diurnals"
 
 import os
 import gi
