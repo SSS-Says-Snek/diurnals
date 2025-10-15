@@ -17,6 +17,9 @@
 
 [![Packaging status](https://repology.org/badge/vertical-allrepos/diurnals.svg)](https://repology.org/project/diurnals/versions)
 
+> [!WARNING]
+> The dependencies needed for the `todoist_api_python` python package on the AUR is outdated. Please use the Flathub installation until this is resolved.
+
 ### Arch Linux (AUR)
 You can install Diurnals with any AUR helper like `yay` or `paru`:
 ```
