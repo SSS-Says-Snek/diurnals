@@ -70,7 +70,6 @@ class ConfigWindow(Adw.PreferencesDialog):
                 self.routines[idx] = schedule_row.get_options()
                 config_changed = True
         if len(self.old_schedule_rows) != len(self.schedule_rows):
-            print("AHA")
             config_changed = True
 
         if config_changed:

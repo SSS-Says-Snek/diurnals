@@ -147,17 +147,19 @@ class TodoistWindow(Adw.ApplicationWindow):
         self.close()
 
     def on_get_tasks_finished(self, worker: TodoistWorker, result, _):
-        tasks = worker.extract_value(result)
+        tasks = worker.extract_value(result) # Iterator[list[Task]]
         if tasks != -1 and not None:
+            tasks = list(tasks)
             self.listbox.remove_all()
 
             if len(tasks) == 0:
                 self.main_content.set_visible_child_name("no-tasks")
             else:
                 self.main_content.set_visible_child_name("task-list")
-                for task in tasks:
-                    task_element = TodoistElement(task, self.toggle_complete_task)
-                    self.listbox.append(task_element)
+                for task_list in tasks:
+                    for task in task_list:
+                        task_element = TodoistElement(task, self.toggle_complete_task)
+                        self.listbox.append(task_element)
         else:  # get_tasks Error
             self.on_get_tasks_failed()
         self.listbox.show()

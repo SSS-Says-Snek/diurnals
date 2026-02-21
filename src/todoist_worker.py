@@ -40,7 +40,7 @@ class TodoistWorker(GObject.GObject):
             return
 
         try:
-            tasks = self.api.get_tasks(filter=self.filter)
+            tasks = self.api.filter_tasks(query=self.filter)
         except Exception:
             task.return_error(GLib.Error("Failed to get tasks"))
         else:
@@ -59,6 +59,6 @@ class TodoistWorker(GObject.GObject):
 
         for completed_task in completed_task_ids:
             try:
-                self.api.close_task(completed_task)
+                self.api.complete_task(completed_task)
             except Exception:
                 error_callback()

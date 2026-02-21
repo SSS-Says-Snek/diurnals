@@ -37,10 +37,10 @@ class TodoistElement(Gtk.ListBoxRow):
         if self.task.due is not None:  # Set due date label
             label = "Due {}"
             css_classes = ["due-date"]
-            due_date_str = self.task.due.date
-            self.due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+            self.due_date: datetime.date = self.task.due.date # type: ignore
 
             days_left = self.due_date - date.today()
+            due_date_str = self.due_date.strftime("%Y-%m-%d")
             if days_left < timedelta(days=0):
                 label = "Overdue"
                 css_classes.append("overdue")
